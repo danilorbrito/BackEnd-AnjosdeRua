@@ -16,6 +16,18 @@ Composer.json  | Autoload com psr4
 PDO  | Interface para trabalhar banco
 Mysql  | Banco de dados
 
+## Links Importantes
+
+Descrição | Endereço
+--------- | ------
+Front-end | https://github.com/learnjsfatec/FrontEnd-AnjosdeRua
+Back-end | https://github.com/learnjsfatec/BackEnd-AnjosdeRua
+App Mobile | https://github.com/learnjsfatec/app-anjosderua
+Servidor Teste | 
+Servidor Produção | 
+Gerencia de Projetos | https://trello.com/b/z5EaxWkK/anjos-de-rua
+
+
 ## Progresso:
 
 - [x] Crud de animais
