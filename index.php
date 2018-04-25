@@ -3,8 +3,9 @@
     header("Content-type:text/html; charset=utf-8");
     require_once('./vendor/autoload.php');
 
-    use app\server\controllers\Router;
     use app\server\models\Animal;
+    use app\server\models\Associado;
+    use app\server\controllers\Router;
     use app\server\controllers\Auth;
     Router::dev();
 
@@ -51,6 +52,45 @@
                 Router::Json( 400 );
         });
     //End Points Animais
+
+    //End Points Associados
+        Router::get('/associados', function() {
+            $associado = new Associado();
+            Router::Json( $associado->all() );
+        });
+
+        Router::get('/associados/{id}', function($params) {
+            $associado = new Associado();
+            Router::Json( $associado->find( $params->id ) );
+        });
+
+        Router::post('/associados', function() {
+            $associado = new Associado();
+
+            if( $associado->save( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Err( 400 );
+        });
+
+        Router::put('/associados', function() {
+            $associado = new Associado();
+            
+            if( $associado->update( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+
+        Router::delete('/associados/{id}', function($params) {
+            $associado = new Associado();
+
+            if( $associado->trash( $params->id ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+    //End Points Associados
 
     //End Point Login para Associados
         Router::post('/authentication', function() {
