@@ -5,6 +5,7 @@
 
     use app\server\models\Animal;
     use app\server\models\Associado;
+    use app\server\models\Adocao;
     use app\server\controllers\Router;
     use app\server\controllers\Auth;
     Router::dev();
@@ -91,6 +92,53 @@
                 Router::Json( 400 );
         });
     //End Points Associados
+
+
+
+    //End Points para Adoções
+        Router::get('/adocoes', function() {
+            $adocao = new Adocao();
+            Router::Json( $adocao->all() );
+        });
+
+        Router::get('/adocoes/{id}', function($params) {
+            $adocao = new Adocao();
+            Router::Json( $adocao->find( $params->id ) );
+        });
+
+        Router::get('/adocoes/associado/{id}', function($params) {
+            $adocao = new Adocao();
+            Router::Json( $adocao->findByAssociado( $params->id ) );
+        });
+
+        Router::post('/adocoes', function() {
+            $adocao = new Adocao();
+
+            if( $adocao->save( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Err( 400 );
+        });
+
+        Router::put('/adocoes', function() {
+            $adocao = new Adocao();
+            
+            if( $adocao->update( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+
+        Router::delete('/adocoes/{id}', function($params) {
+            $adocao = new Adocao();
+
+            if( $adocao->trash( $params->id ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+    //End Points para Adoções
+
 
     //End Point Login para Associados
         Router::post('/authentication', function() {
