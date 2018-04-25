@@ -195,6 +195,14 @@
     //End Points para Denuncias
 
 
+    //End Point para Filtro de animais
+        Router::get('/filtro/{cor}/{idademin}/{idademax}/{sexo}', function($params) {
+            $animal = new Animal();
+            Router::Json( $animal->filtro( $params ) );
+        });
+    //End Point para Filtro de animais
+
+
     //End Point Login para Associados
         Router::post('/authentication', function() {
             $dados = Router::getJson();
