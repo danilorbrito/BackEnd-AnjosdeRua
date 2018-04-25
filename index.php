@@ -7,6 +7,7 @@
     use app\server\models\Associado;
     use app\server\models\Adocao;
     use app\server\models\Mensagem;
+    use app\server\models\Denuncia;
     use app\server\controllers\Router;
     use app\server\controllers\Auth;
     Router::dev();
@@ -161,6 +162,37 @@
                 Router::Err( 400 );
         });
     //End Points para Mensagens
+
+
+    //End Points para Denuncias
+        Router::get('/denuncias', function() {
+            $denuncia = new Denuncia();
+            Router::Json( $denuncia->all() );
+        });
+
+        Router::get('/denuncias/{id}', function($params) {
+            $denuncia = new Denuncia();
+            Router::Json( $denuncia->find( $params->id ) );
+        });
+
+        Router::post('/denuncias', function() {
+            $denuncia = new Denuncia();
+
+            if( $denuncia->save( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Err( 400 );
+        });
+
+        Router::delete('/denuncias/{id}', function($params) {
+            $denuncia = new Denuncia();
+
+            if( $denuncia->trash( $params->id ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+    //End Points para Denuncias
 
 
     //End Point Login para Associados
