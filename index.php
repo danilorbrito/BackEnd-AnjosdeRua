@@ -6,6 +6,7 @@
     use app\server\models\Animal;
     use app\server\models\Associado;
     use app\server\models\Adocao;
+    use app\server\models\Mensagem;
     use app\server\controllers\Router;
     use app\server\controllers\Auth;
     Router::dev();
@@ -138,6 +139,28 @@
                 Router::Json( 400 );
         });
     //End Points para Adoções
+
+
+    //End Points para Mensagens
+        Router::get('/mensagens', function() {
+            $mensagem = new Mensagem();
+            Router::Json( $mensagem->all() );
+        });
+
+        Router::get('/mensagens/adocao/{id}', function($params) {
+            $mensagem = new Mensagem();
+            Router::Json( $mensagem->findByAdocao( $params->id ) );
+        });
+
+        Router::post('/mensagens', function() {
+            $mensagem = new Mensagem();
+
+            if( $mensagem->save( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Err( 400 );
+        });
+    //End Points para Mensagens
 
 
     //End Point Login para Associados
