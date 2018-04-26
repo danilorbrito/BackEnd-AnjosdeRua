@@ -70,4 +70,14 @@
             return $st->execute();
         }
 
+        public function filtro( $params ) {
+            $st = Conn::getConn()->prepare("SELECT * FROM animais WHERE cor=? and (idade between ? and ?) and sexo=?");
+            $st->bindParam(1, $params->cor);
+            $st->bindParam(2, $params->idademin);
+            $st->bindParam(3, $params->idademax);
+            $st->bindParam(4, $params->sexo);
+            $st->execute();
+            return $st->fetchAll(PDO::FETCH_ASSOC);
+        }
+
     }
