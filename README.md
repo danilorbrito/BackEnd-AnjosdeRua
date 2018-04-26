@@ -31,13 +31,13 @@ Gerencia de Projetos | https://trello.com/b/z5EaxWkK/anjos-de-rua
 ## Progresso:
 
 - [x] Crud de animais
-- [ ] Crud de associados
-- [ ] Crud de denúncias
-- [ ] Crud de adoçoes
-- [ ] Crud de mensagens
+- [x] Crud de associados
+- [x] Crud de denúncias
+- [x] Crud de adoçoes
+- [x] Crud de mensagens
 - [x] Login App
 - [x] Login Admin
-- [ ] Filtro para busca de animais
+- [x] Filtro para busca de animais
 
 # Contribuidores
 
