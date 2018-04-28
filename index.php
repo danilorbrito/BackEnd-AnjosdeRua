@@ -19,16 +19,21 @@
     
     //End Points Animais
         Router::get('/animais', function() {
+
+            Router::validateJwt();//Rota protegida por JWT
+
             $animal = new Animal();
             Router::Json( $animal->all() );
         });
 
         Router::get('/animais/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $animal = new Animal();
             Router::Json( $animal->find( $params->id ) );
         });
 
         Router::post('/animais', function($dados) {
+            Router::validateJwt();//Rota protegida por JWT
             $animal = new Animal();
 
             if( $animal->save( Router::getJson() ) )
@@ -38,6 +43,7 @@
         });
 
         Router::put('/animais', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $animal = new Animal();
             
             if( $animal->update( Router::getJson() ) )
@@ -47,6 +53,7 @@
         });
 
         Router::delete('/animais/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $animal = new Animal();
 
             if( $animal->trash( $params->id ) )
@@ -58,16 +65,19 @@
 
     //End Points Associados
         Router::get('/associados', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $associado = new Associado();
             Router::Json( $associado->all() );
         });
 
         Router::get('/associados/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $associado = new Associado();
             Router::Json( $associado->find( $params->id ) );
         });
 
         Router::post('/associados', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $associado = new Associado();
 
             if( $associado->save( Router::getJson() ) )
@@ -77,6 +87,7 @@
         });
 
         Router::put('/associados', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $associado = new Associado();
             
             if( $associado->update( Router::getJson() ) )
@@ -86,6 +97,7 @@
         });
 
         Router::delete('/associados/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $associado = new Associado();
 
             if( $associado->trash( $params->id ) )
@@ -99,21 +111,25 @@
 
     //End Points para Adoções
         Router::get('/adocoes', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $adocao = new Adocao();
             Router::Json( $adocao->all() );
         });
 
         Router::get('/adocoes/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $adocao = new Adocao();
             Router::Json( $adocao->find( $params->id ) );
         });
 
         Router::get('/adocoes/associado/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $adocao = new Adocao();
             Router::Json( $adocao->findByAssociado( $params->id ) );
         });
 
         Router::post('/adocoes', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $adocao = new Adocao();
 
             if( $adocao->save( Router::getJson() ) )
@@ -123,6 +139,7 @@
         });
 
         Router::put('/adocoes', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $adocao = new Adocao();
             
             if( $adocao->update( Router::getJson() ) )
@@ -132,6 +149,7 @@
         });
 
         Router::delete('/adocoes/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $adocao = new Adocao();
 
             if( $adocao->trash( $params->id ) )
@@ -144,16 +162,19 @@
 
     //End Points para Mensagens
         Router::get('/mensagens', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $mensagem = new Mensagem();
             Router::Json( $mensagem->all() );
         });
 
         Router::get('/mensagens/adocao/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $mensagem = new Mensagem();
             Router::Json( $mensagem->findByAdocao( $params->id ) );
         });
 
         Router::post('/mensagens', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $mensagem = new Mensagem();
 
             if( $mensagem->save( Router::getJson() ) )
@@ -166,11 +187,13 @@
 
     //End Points para Denuncias
         Router::get('/denuncias', function() {
+            Router::validateJwt();//Rota protegida por JWT
             $denuncia = new Denuncia();
             Router::Json( $denuncia->all() );
         });
 
         Router::get('/denuncias/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $denuncia = new Denuncia();
             Router::Json( $denuncia->find( $params->id ) );
         });
@@ -185,6 +208,7 @@
         });
 
         Router::delete('/denuncias/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
             $denuncia = new Denuncia();
 
             if( $denuncia->trash( $params->id ) )
@@ -214,7 +238,7 @@
         });
     //End Point Login para Associados
     
-    //End Point Login para Associados
+    //End Point Login para Admin
         Router::post('/adminauthentication', function() {
             $dados = Router::getJson();
 
@@ -225,7 +249,7 @@
             else
                 Router::Json(401);
         });
-    //End Point Login para Associados
+    //End Point Login para Admin
 
 
     Router::notFound("./app/client/notFound.html");
