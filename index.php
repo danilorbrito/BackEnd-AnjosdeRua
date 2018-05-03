@@ -10,6 +10,7 @@
     use app\server\models\Denuncia;
     use app\server\controllers\Router;
     use app\server\controllers\Auth;
+    use app\server\controllers\Upload;
     Router::dev();
 
     //TEMPLATE Principal
@@ -36,7 +37,7 @@
             Router::validateJwt();//Rota protegida por JWT
             $animal = new Animal();
 
-            if( $animal->save( Router::getJson() ) )
+            if( Upload::move("./app/client/assets/imagens/animais", array(".jpg",".jpeg",".png")) == true and $animal->save( Upload::getName(), $_POST ) )
                 Router::Json( 200 );
             else 
                 Router::Err( 400 );

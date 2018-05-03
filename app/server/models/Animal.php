@@ -6,10 +6,12 @@
     class Animal {
 
         //recebe um array com os dados do animal de insere no banco
-        public function save( $animal )
+        public function save( $nameImage, $animal )
         {
+            $animal = (object) $animal;
+
             //valida os campos obrigatórios antes
-            if( $animal->nome <> "" and $animal->descricao <> "" and $animal->raca <> "" and $animal->cor <> "" and $animal->idade <> "" and $animal->sexo <> "" and $animal->imagem <> "" )
+            if( $animal->nome <> "" and $animal->descricao <> "" and $animal->raca <> "" and $animal->cor <> "" and $animal->idade <> "" and $animal->sexo <> "" and $nameImage <> "" )
             {
                 $st = Conn::getConn()->prepare("INSERT INTO animais VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
                 $st->bindParam(1, $animal->nome);
@@ -18,7 +20,7 @@
                 $st->bindParam(4, $animal->cor);
                 $st->bindParam(5, $animal->idade);
                 $st->bindParam(6, $animal->sexo);
-                $st->bindParam(7, $animal->imagem);
+                $st->bindParam(7, $nameImage);
                 return $st->execute();
             }
             else
@@ -65,9 +67,8 @@
         //deleta animal pelo id
         public function trash( $id )
         {
-            $st = Conn::getConn()->prepare(" DELETE FROM animais WHERE id=? ");
-            $st->bindParam(1, $id);
-            return $st->execute();
+            $imagem = Conn::getConn()->query("select imagem from animais where id=".$id)->fetch(PDO::FETCH_ASSOC);
+            return (Conn::getConn()->query("delete from animais where id=".$id) == true) and (unlink("./app/client/assets/imagens/animais/".$imagem['imagem']));
         }
 
         public function filtro( $params ) {
