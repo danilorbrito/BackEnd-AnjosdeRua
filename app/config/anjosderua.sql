@@ -1,95 +1,130 @@
+/*
 
-create table admin(
-	id int primary key auto_increment,
-	nome varchar(100),
-	login varchar(10),
-	pass varchar(10)
+BANCO DE DADOS: anjos_de_rua
+
+TABELAS:
+
+Admin
+Animais
+Imagens_Animais (VINCULADA AOS ANIMAIS)
+Associados
+Enderecos
+Telefones
+Adocoes
+Mensagens_Adocoes (VINCULADA AS ADOCOES)
+Denuncias
+Imagens_Denuncias (VINCULADA AS DENUNCIAS)
+
+*/
+
+/*CRIAÇÃO DO BANCO*/
+CREATE DATABASE IF NOT EXISTS anjos_de_rua;
+
+/*BANCO EM USO*/
+USE anjos_de_rua;
+
+/* TABELA ADMIN */
+CREATE TABLE Admin(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	nome VARCHAR(75) NOT NULL,
+	login VARCHAR(50) NOT NULL,
+	senha VARCHAR(50) NOT NULL,
+	CONSTRAINT pk_01_admin PRIMARY KEY (id)
 );
 
 
-create table animais(
-	id int primary key auto_increment,
-	nome varchar(100),
-	descricao varchar(300),
-	raca varchar(50),
-	cor varchar(30),
-	idade int,
-	sexo varchar(1),
-	imagem varchar(200)
+/* TABELA ANIMAIS */
+CREATE TABLE Animais(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	nome VARCHAR(30) DEFAULT 'Sem Nome',
+	descricao TEXT NOT NULL,
+	raca VARCHAR(35) DEFAULT 'SRD',
+	cor VARCHAR(25) NOT NULL,
+	idade INTEGER,
+	sexo VARCHAR(5) NOT NULL,
+	CONSTRAINT pk_01_animais PRIMARY KEY (id)
 );
 
-create table associados(
-	id int primary key auto_increment,
-	nome varchar(100),
-	sexo varchar(1),
-	email varchar(100),
-	pass varchar(10)
+/* TABELA IMAGENS_ANIMAIS (VINCULADA AOS ANIMAIS) */
+CREATE TABLE Imagens_Animais(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  id_animal INTEGER UNSIGNED NOT NULL,
+  nome_imagem TEXT NOT NULL,
+  CONSTRAINT pk_01_imagensAnimais PRIMARY KEY (id),
+  CONSTRAINT fk_01_imagensAnimais_animais FOREIGN KEY (id_animal) REFERENCES Animais (id)
 );
 
-
-
-
-
-
-create table enderecos(
-	id int primary key auto_increment,
-	idassociado int,
-	logradouro varchar(50),
-	numero varchar(5),
-	complemento varchar(50),
-	bairro varchar(50),
-	cep varchar(50),
-	cidade varchar(50),
-	estado varchar(2)
+/* TABELA ASSOCIADOS */
+CREATE TABLE Associados(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	nome VARCHAR(80) NOT NULL,
+	sexo VARCHAR(10) NOT NULL,
+	email VARCHAR(70),
+	CONSTRAINT pk_01_associados PRIMARY KEY (id)
 );
 
-ALTER TABLE `enderecos` ADD CONSTRAINT `fk_endereco_associado` 
-FOREIGN KEY ( `idassociado` ) REFERENCES `associados`( `id` );
-
-
-
-
-
-create table telefones(
-	id int primary key auto_increment,
-	idassociado int,
-	numero varchar(50)
+/* TABELA ENDERECOS */
+CREATE TABLE Enderecos(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	id_associado INTEGER UNSIGNED NOT NULL,
+	logradouro VARCHAR(150) NOT NULL,
+	numero VARCHAR(50) DEFAULT 'S/n',
+	complemento VARCHAR(150),
+	bairro VARCHAR(100) NOT NULL,
+	cep VARCHAR(10) NOT NULL,
+	cidade VARCHAR(100) NOT NULL,
+	estado CHAR(2) NOT NULL,
+	CONSTRAINT pk_01_enderecos PRIMARY KEY (id),
+	CONSTRAINT fk_01_enderecos_associados FOREIGN KEY (id_associado) REFERENCES Associados (id)
 );
-ALTER TABLE `telefones` ADD CONSTRAINT `fk_telefone_associado` 
-FOREIGN KEY ( `idassociado` ) REFERENCES `associados`( `id` );
 
-
-
-create table adocoes(
-	id int primary key auto_increment,
-	idanimal int,
-	idassociado int,
-	data varchar(10)
+/* TABELA TELEFONES */
+CREATE TABLE Telefones(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	id_associado INTEGER UNSIGNED NOT NULL,
+	numero VARCHAR(15) NOT NULL,
+	tipo VARCHAR(15) NOT NULL,
+	CONSTRAINT pk_01_telefones PRIMARY KEY (id),
+	CONSTRAINT fk_01_telefones_associados FOREIGN KEY (id_associado) REFERENCES Associados (id)
 );
-ALTER TABLE `adocoes` ADD CONSTRAINT `fk_adocao_animal` 
-FOREIGN KEY ( `idanimal` ) REFERENCES `animais`( `id` );
 
-ALTER TABLE `adocoes` ADD CONSTRAINT `fk_adocao_associado` 
-FOREIGN KEY ( `idassociado` ) REFERENCES `idassociados`( `id` );
-
-
-
-create table mensagens(
-	id int primary key auto_increment,
-	idadocao int,
-	mensagem varchar(100),
-	datahora varchar(20),
-	remetente varchar(50)
+/* TABELA ADOCOES */
+CREATE TABLE Adocoes(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	id_animal INTEGER UNSIGNED NOT NULL,
+	id_associado INTEGER UNSIGNED NOT NULL,
+	dt_adocao DATETIME NOT NULL DEFAULT NOW(),
+	CONSTRAINT pk_01_adocoes PRIMARY KEY (id),
+	CONSTRAINT fk_01_adocoes_animais FOREIGN KEY (id_animal) REFERENCES Animais (id),
+	CONSTRAINT fk_02_adocoes_associados FOREIGN KEY (id_associado) REFERENCES Associados (id)
 );
-ALTER TABLE `mensagens` ADD CONSTRAINT `fk_mensagem_adocao` 
-FOREIGN KEY ( `idadocao` ) REFERENCES `adocoes`( `id` );
 
+/* TABELA MENSAGENS_ADOCOES (VINCULADA AS ADOCOES) */
+CREATE TABLE Mensagens_Adocoes(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	id_adocao INTEGER UNSIGNED NOT NULL,
+	mensagem TEXT NOT NULL,
+	remetente VARCHAR(22) NOT NULL DEFAULT "Anjos De Rua - Adoções",
+	dt_mensagem DATETIME NOT NULL DEFAULT NOW(),
+	CONSTRAINT pk_01_mensagensAdocoes PRIMARY KEY (id),
+	CONSTRAINT fk_01_mensagensAdocoes_adocoes FOREIGN KEY (id_adocao) REFERENCES Adocoes (id)
+);
 
+/* TABELA DENUNCIAS */
+CREATE TABLE Denuncias(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	descricao TEXT NOT NULL,
+	delator VARCHAR(75),
+	descricao_local VARCHAR(150) NOT NULL,
+	dt_denuncia DATETIME NOT NULL DEFAULT NOW(),
+	CONSTRAINT pk_01_denuncias PRIMARY KEY (id)
+);
 
-create table denuncias(
-	id int primary key auto_increment,
-	descricao varchar(200),
-	delator varchar(100),
-	datahora varchar(20),
-	descricaolocal varchar(300)
+/* TABELA IMAGENS_DENUNCIAS (VINCULADA AS DENUNCIAS) */
+CREATE TABLE Imagens_Denuncias(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  id_denuncia INTEGER UNSIGNED NOT NULL,
+  nome_imagem TEXT NOT NULL,
+  CONSTRAINT pk_01_imagensDenuncias PRIMARY KEY (id),
+  CONSTRAINT fk_01_imagensDenuncias_denuncias FOREIGN KEY (id_denuncia) REFERENCES Denuncias (id)
 );
