@@ -10,7 +10,7 @@
         private static $host     = "localhost";
 		private static $user     = "root";
 		private static $pass     = "";
-		private static $dbName   = "anjosderua";
+		private static $dbName   = "anjos_de_rua";
 		private static $Connect  = null; 
 		
 		private static function Conectar()

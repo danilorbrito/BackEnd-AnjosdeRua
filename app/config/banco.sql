@@ -60,6 +60,7 @@ CREATE TABLE Associados(
 	nome VARCHAR(80) NOT NULL,
 	sexo VARCHAR(10) NOT NULL,
 	email VARCHAR(70),
+	senha VARCHAR(50) NOT NULL,
 	CONSTRAINT pk_01_associados PRIMARY KEY (id)
 );
 
