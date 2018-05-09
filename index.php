@@ -4,6 +4,7 @@
     require_once('./vendor/autoload.php');
 
     use app\server\models\Animal;
+    use app\server\models\ImagemAnimal;
     use app\server\models\Associado;
     use app\server\models\Adocao;
     use app\server\models\Mensagem;
@@ -63,6 +64,27 @@
                 Router::Json( 400 );
         });
     //End Points Animais
+
+    //End Points Imagens_animais
+        Router::post('/imagens_animais', function() {
+            Router::validateJwt();//Rota protegida por JWT
+            $imgAnimal = new ImagemAnimal();
+
+            if( Upload::move("./app/client/assets/imagens/animais", array(".jpg",".jpeg",".png")) == true and $imgAnimal->save( Upload::getName(), $_POST["id_animal"] ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+        Router::delete('/imagens_animais/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $imgAnimal = new ImagemAnimal();
+
+            if( $imgAnimal->trash( $params->id ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+    //End Points Imagens_animais
 
     //End Points Associados
         Router::get('/associados', function() {
