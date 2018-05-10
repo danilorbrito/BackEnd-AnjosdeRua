@@ -9,3 +9,13 @@ BEGIN
 END$
 
 DELIMITER ;
+
+DELIMITER $
+CREATE TRIGGER Denuncias_delete before delete 
+on Denuncias
+FOR EACH ROW
+BEGIN
+    delete from Imagens_denuncias where id_denuncia = old.id;
+    
+END$
+DELIMITER ;
