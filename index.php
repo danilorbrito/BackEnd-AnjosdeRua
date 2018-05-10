@@ -9,6 +9,7 @@
     use app\server\models\Adocao;
     use app\server\models\Mensagem;
     use app\server\models\Denuncia;
+    use app\server\models\ImagemDenuncia;
     use app\server\controllers\Router;
     use app\server\controllers\Auth;
     use app\server\controllers\Upload;
@@ -131,7 +132,6 @@
     //End Points Associados
 
 
-
     //End Points para Adoções
         Router::get('/adocoes', function() {
             Router::validateJwt();//Rota protegida por JWT
@@ -224,7 +224,7 @@
         Router::post('/denuncias', function() {
             $denuncia = new Denuncia();
 
-            if( $denuncia->save( Router::getJson() ) )
+            if( Upload::move("./app/client/assets/imagens/denunciadas", array(".jpg",".jpeg",".png")) == true and $denuncia->save( Upload::getName(), $_POST ) )
                 Router::Json( 200 );
             else 
                 Router::Err( 400 );
@@ -240,6 +240,27 @@
                 Router::Json( 400 );
         });
     //End Points para Denuncias
+
+    //End Points Imagens_denuncias
+        Router::post('/imagens_denuncias', function() {
+            Router::validateJwt();//Rota protegida por JWT
+            $imgDenuncia = new ImagemDenuncia();
+
+            if( Upload::move("./app/client/assets/imagens/denunciadas", array(".jpg",".jpeg",".png")) == true and $imgDenuncia->save( Upload::getName(), $_POST["id_denuncia"] ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+        Router::delete('/imagens_denuncias/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $imgDenuncia = new ImagemDenuncia();
+
+            if( $imgDenuncia->trash( $params->id ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+    //End Points Imagens_denuncias
 
 
     //End Point para Filtro de animais
