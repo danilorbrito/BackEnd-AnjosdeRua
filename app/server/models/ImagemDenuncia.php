@@ -9,17 +9,24 @@
         {
             if($id_denuncia <> "")
             {
-                $st = Conn::getConn()->prepare("call inserir_imagens_denuncias(?,?)");
-                $st->bindParam(1, $id_denuncia);
-                $st->bindParam(2, $nameImage);
+                $flag = "denunciada";
+                $st = Conn::getConn()->prepare("call inserir_imagens(?,?,?)");
+                $st->bindParam(1, $nameImage);
+                $st->bindParam(2, $id_denuncia);
+                $st->bindParam(3, $flag);
                 return $st->execute();
             }
             return false;
         }
 
+        public function all() 
+        {
+            return Conn::getConn()->query("select * from Imagens where flag='denunciada'")->fetchAll(PDO::FETCH_ASSOC);
+        }
+
         public function trash($id) 
         {
-           $imagem = Conn::getConn()->query("select nome_imagem from Imagens_Denuncias where id=".$id)->fetch(PDO::FETCH_ASSOC);
-           return (Conn::getConn()->query("delete from Imagens_Denuncias where id=".$id) == true) and (unlink("./app/client/assets/imagens/denunciadas/".$imagem["nome_imagem"]));
+           $imagem = Conn::getConn()->query("select nome_imagem from Imagens where id=".$id)->fetch(PDO::FETCH_ASSOC);
+           return (Conn::getConn()->query("delete from Imagens where id=".$id) == true) and (unlink("./app/client/assets/imagens/denunciadas/".$imagem["nome_imagem"]));
         }
     }

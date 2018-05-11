@@ -35,12 +35,13 @@
             Router::Json( $animal->find( $params->id ) );
         });
 
-        Router::post('/animais', function($dados) {
+        Router::post('/animais', function() {
             Router::validateJwt();//Rota protegida por JWT
             $animal = new Animal();
 
-            if( Upload::move("./app/client/assets/imagens/animais", array(".jpg",".jpeg",".png")) == true and $animal->save( Upload::getName(), $_POST ) )
-                Router::Json( 200 );
+            $resgistro = $animal->save(Router::getJson());
+            if($resgistro)
+                Router::Json($resgistro);
             else 
                 Router::Err( 400 );
         });
@@ -76,6 +77,12 @@
             else 
                 Router::Json( 400 );
         });
+
+        Router::get('/imagens_animais', function() {
+            $imgAnimal = new ImagemAnimal();
+            Router::Json($imgAnimal->all());
+        });
+
         Router::delete('/imagens_animais/{id}', function($params) {
             Router::validateJwt();//Rota protegida por JWT
             $imgAnimal = new ImagemAnimal();
@@ -86,6 +93,80 @@
                 Router::Json( 400 );
         });
     //End Points Imagens_animais
+
+    //End Point para Filtro de animais
+        Router::get('/filtro/{cor}/{idademin}/{idademax}/{sexo}', function($params) {
+            $animal = new Animal();
+            Router::Json( $animal->filtro( $params ) );
+        });
+    //End Point para Filtro de animais
+
+    
+
+    //End Points para Denuncias
+        Router::get('/denuncias', function() {
+            Router::validateJwt();//Rota protegida por JWT
+            $denuncia = new Denuncia();
+            Router::Json($denuncia->all());
+        });
+
+        Router::get('/denuncias/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $denuncia = new Denuncia();
+            Router::Json($denuncia->find($params->id));
+        });
+
+        Router::post('/denuncias', function() {
+            $denuncia = new Denuncia();
+
+            $resgistro = $denuncia->save(Router::getJson());
+            if($resgistro)
+                Router::Json($resgistro);
+            else 
+                Router::Json( 400 );
+        });
+
+        Router::delete('/denuncias/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $denuncia = new Denuncia();
+
+            if( $denuncia->trash( $params->id ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+    //End Points para Denuncias
+
+    //End Points Imagens_denuncias
+        Router::post('/imagens_denuncias', function() {
+            Router::validateJwt();//Rota protegida por JWT
+            $imgDenuncia = new ImagemDenuncia();
+
+            if( Upload::move("./app/client/assets/imagens/denunciadas", array(".jpg",".jpeg",".png")) == true and $imgDenuncia->save( Upload::getName(), $_POST["id_denuncia"] ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+
+        Router::get('/imagens_denuncias', function() {
+            Router::validateJwt();//Rota protegida por JWT
+            $imgDenuncia = new ImagemDenuncia();
+            Router::Json( $imgDenuncia->all() );
+        });
+
+        Router::delete('/imagens_denuncias/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $imgDenuncia = new ImagemDenuncia();
+
+            if( $imgDenuncia->trash( $params->id ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+    //End Points Imagens_denuncias
+
+
+
 
     //End Points Associados
         Router::get('/associados', function() {
@@ -206,70 +287,6 @@
                 Router::Err( 400 );
         });
     //End Points para Mensagens
-
-
-    //End Points para Denuncias
-        Router::get('/denuncias', function() {
-            Router::validateJwt();//Rota protegida por JWT
-            $denuncia = new Denuncia();
-            Router::Json( $denuncia->all() );
-        });
-
-        Router::get('/denuncias/{id}', function($params) {
-            Router::validateJwt();//Rota protegida por JWT
-            $denuncia = new Denuncia();
-            Router::Json( $denuncia->find( $params->id ) );
-        });
-
-        Router::post('/denuncias', function() {
-            $denuncia = new Denuncia();
-
-            if( Upload::move("./app/client/assets/imagens/denunciadas", array(".jpg",".jpeg",".png")) == true and $denuncia->save( Upload::getName(), $_POST ) )
-                Router::Json( 200 );
-            else 
-                Router::Err( 400 );
-        });
-
-        Router::delete('/denuncias/{id}', function($params) {
-            Router::validateJwt();//Rota protegida por JWT
-            $denuncia = new Denuncia();
-
-            if( $denuncia->trash( $params->id ) )
-                Router::Json( 200 );
-            else 
-                Router::Json( 400 );
-        });
-    //End Points para Denuncias
-
-    //End Points Imagens_denuncias
-        Router::post('/imagens_denuncias', function() {
-            Router::validateJwt();//Rota protegida por JWT
-            $imgDenuncia = new ImagemDenuncia();
-
-            if( Upload::move("./app/client/assets/imagens/denunciadas", array(".jpg",".jpeg",".png")) == true and $imgDenuncia->save( Upload::getName(), $_POST["id_denuncia"] ) )
-                Router::Json( 200 );
-            else 
-                Router::Json( 400 );
-        });
-        Router::delete('/imagens_denuncias/{id}', function($params) {
-            Router::validateJwt();//Rota protegida por JWT
-            $imgDenuncia = new ImagemDenuncia();
-
-            if( $imgDenuncia->trash( $params->id ) )
-                Router::Json( 200 );
-            else 
-                Router::Json( 400 );
-        });
-    //End Points Imagens_denuncias
-
-
-    //End Point para Filtro de animais
-        Router::get('/filtro/{cor}/{idademin}/{idademax}/{sexo}', function($params) {
-            $animal = new Animal();
-            Router::Json( $animal->filtro( $params ) );
-        });
-    //End Point para Filtro de animais
-
 
     //End Point Login para Associados
         Router::post('/authentication', function() {

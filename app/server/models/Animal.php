@@ -6,22 +6,20 @@
     class Animal {
 
         //recebe um array com os dados do animal de insere no banco
-        public function save( $nameImage, $animal )
+        public function save( $animal )
         {
-            $animal = (object) $animal;
-
             //valida os campos obrigatórios antes
-            if( $animal->nome <> "" and $animal->descricao <> "" and $animal->raca <> "" and $animal->cor <> "" and $animal->idade <> "" and $animal->sexo <> "" and $nameImage <> "" )
+            if( $animal->descricao <> "" and $animal->cor <> "" and $animal->sexo <> "" )
             {
-                $st = Conn::getConn()->prepare("call inserir_animais(?,?,?,?,?,?,?)");//essa procedure adiciona o nome da imagem do animal
-                $st->bindParam(1, $animal->nome);                                     //na tabela imagens_animais
+                $st = Conn::getConn()->prepare("call inserir_animais(?,?,?,?,?,?)");//essa procedure adiciona o nome da imagem do animal na tabela imagens_animais
+                $st->bindParam(1, $animal->nome);//não precisa ser verificado, caso nulo a procedure colocara um valor padrao                                     
                 $st->bindParam(2, $animal->descricao);
-                $st->bindParam(3, $animal->raca);
+                $st->bindParam(3, $animal->raca);//não precisa ser verificado, caso nulo a procedure colocara um valor padrao
                 $st->bindParam(4, $animal->cor);
-                $st->bindParam(5, $animal->idade);
+                $st->bindParam(5, $animal->idade);//não precisa ser verificado, caso nulo a procedure colocara um valor padrao
                 $st->bindParam(6, $animal->sexo);
-                $st->bindParam(7, $nameImage);
-                return $st->execute();
+                $st->execute();
+                return $st->fetch(PDO::FETCH_ASSOC);
             }
             else
                 return false;
@@ -30,13 +28,13 @@
         //retorna todos os animais
         public function all() 
         {
-            return Conn::getConn()->query("call todos_animais()")->fetchAll(PDO::FETCH_ASSOC);
+            return Conn::getConn()->query("select * from animais")->fetchAll(PDO::FETCH_ASSOC);
         }
 
         //retorna animal pelo id
         public function find($id) 
         {
-            return Conn::getConn()->query("call selecionar_animal(".$id.")")->fetchAll(PDO::FETCH_ASSOC);
+            return Conn::getConn()->query("select * from animais where id=".$id)->fetch(PDO::FETCH_ASSOC);
             
         }
 
@@ -64,7 +62,7 @@
         //deleta animal pelo id
         public function trash( $id )
         {
-            $imagens = Conn::getConn()->query("select nome_imagem from imagens_animais where id_animal=".$id)->fetchAll(PDO::FETCH_ASSOC);
+            $imagens = Conn::getConn()->query("select nome_imagem from Imagens where flag='animal' and id_foreign=".$id)->fetchAll(PDO::FETCH_ASSOC);
             if (Conn::getConn()->query("delete from animais where id=".$id) == true)//tem uma trigger no mysql que remove os registro 
             {                                                                       //na tabela imagens_animais relacinado ao id do animal
                 foreach ($imagens as $img)
