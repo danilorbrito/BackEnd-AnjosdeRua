@@ -4,7 +4,7 @@ CREATE TRIGGER Animais_delete before delete
 on Animais
 FOR EACH ROW
 BEGIN
-    delete from imagens_animais where id_animal = old.id;
+    delete from Imagens where id_foreign = old.id and flag="animal";
     
 END$
 
@@ -15,7 +15,7 @@ CREATE TRIGGER Denuncias_delete before delete
 on Denuncias
 FOR EACH ROW
 BEGIN
-    delete from Imagens_denuncias where id_denuncia = old.id;
+    delete from Imagens where id_foreign = old.id and flag="denunciada";
     
 END$
 DELIMITER ;

@@ -5,8 +5,7 @@ CREATE PROCEDURE inserir_animais(IN nome VARCHAR(30),
                                	 IN raca VARCHAR(35),
                                	 IN cor VARCHAR(25),
                                	 IN idade INTEGER,
-                               	 IN sexo VARCHAR(5),
-                                 IN imagem TEXT)
+                               	 IN sexo VARCHAR(5))
 BEGIN
 
   SET @var_nome = nome;
@@ -15,8 +14,7 @@ BEGIN
   SET @var_cor = cor;
   SET @var_idade = idade;
   SET @var_sexo = sexo;
-  SET @var_imagem = imagem;
-  SET @var_id_animal = "";
+  SET @var_id_animal = 0;
 
   IF (nome = "") THEN SET @var_nome = "Sem Nome"; END IF;
   IF(raca = "") THEN SET @var_raca = "SRD"; END IF;
@@ -27,15 +25,14 @@ BEGIN
 
   SELECT LAST_INSERT_ID() INTO @var_id_animal;
 
-  INSERT INTO Imagens_Animais(id_animal, nome_imagem)
-  VALUES(@var_id_animal, @var_imagem);
+  SELECT * from animais where id = @var_id_animal;
 
   COMMIT WORK;
 
 END $$
 DELIMITER ;
 
-/* Procedure Imagens_Animais (VINCULADA AOS ANIMAIS) */
+/* Procedure Imagens_Animais (VINCULADA AOS ANIMAIS) 
 DELIMITER $$
 CREATE PROCEDURE inserir_imagens_animais(IN id_animal INTEGER,
                                          IN nome_imagem TEXT)
@@ -50,38 +47,7 @@ BEGIN
   COMMIT WORK;
 
 END $$
-DELIMITER ;
-
-/* Procedure Selecionar todos animais*/
-DELIMITER $$
-CREATE PROCEDURE todos_animais()
-BEGIN
-
-  select 
-    a.*,
-    i.nome_imagem
-  from 
-    animais a
-  inner join imagens_animais i on a.id = i.id_animal;
-
-END $$
-DELIMITER ;
-
-/* Procedure Selecionar animal por ID*/
-DELIMITER $$
-CREATE PROCEDURE selecionar_animal(IN id INTEGER)
-BEGIN
-
-  select 
-    a.*,
-    i.nome_imagem
-  from 
-    animais a
-  inner join imagens_animais i on a.id = i.id_animal
-  where a.id = id;
-
-END $$
-DELIMITER ;
+DELIMITER ; */
 
 /* Procedure Selecionar animais por filtro*/
 DELIMITER $$
@@ -106,32 +72,27 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE inserir_denuncias(IN descricao TEXT,
                                    IN delator VARCHAR(75),
-                                   IN descricao_local VARCHAR(150),
-                                   IN dt_denuncia DATETIME,
-                                   IN nome_imagem VARCHAR(50))
+                                   IN descricao_local VARCHAR(150))
 BEGIN
 
   SET @var_delator = delator;
-  SET @var_dt_denuncia = dt_denuncia;
   SET @var_id_denuncia = 0;  
 
   IF(delator = "") THEN SET @var_delator = "Anônimo"; END IF;
-  IF(dt_denuncia = "") THEN SET @var_dt_denuncia = now(); END IF;
 
-  INSERT INTO Denuncias(descricao, delator, descricao_local, dt_denuncia)
-  VALUES(descricao, @var_delator, descricao_local, dt_denuncia);
+  INSERT INTO Denuncias(descricao, delator, descricao_local)
+  VALUES(descricao, @var_delator, descricao_local);
 
   SELECT LAST_INSERT_ID() INTO @var_id_denuncia;
 
-  INSERT INTO Imagens_Denuncias(id_denuncia, nome_imagem)
-  VALUES(@var_id_denuncia, nome_imagem);
+  SELECT * from Denuncias where id = @var_id_denuncia;
 
-  COMMIT WORk;
+  COMMIT WORK;
 
 END $$
 DELIMITER ;
 
-/* Procedure Imagens_Denuncias (VINCULADA AS DENUNCIAS) */
+/* Procedure Imagens_Denuncias (VINCULADA AS DENUNCIAS) 
 DELIMITER $$
 CREATE PROCEDURE inserir_imagens_denuncias(IN id_denuncia INTEGER,
                                            IN nome_imagem TEXT)
@@ -146,35 +107,19 @@ BEGIN
   COMMIT WORK;
 
 END $$
-DELIMITER ;
+DELIMITER ; */
 
-/* Procedure Selecionar todas as denuncias*/
+/* Procedure Imagens */
 DELIMITER $$
-CREATE PROCEDURE todas_denuncias()
+CREATE PROCEDURE inserir_imagens(IN nome_imagem TEXT,
+                                 IN id_foreign INTEGER,
+                                 IN flag VARCHAR(15))
 BEGIN
 
-  select 
-    d.*,
-    i.nome_imagem
-  from 
-    Denuncias d
-  inner join Imagens_Denuncias i on d.id = i.id_denuncia;
+  INSERT INTO Imagens(nome_imagem, id_foreign, flag)
+  VALUES(nome_imagem, id_foreign, flag);
 
-END $$
-DELIMITER ;
-
-/* Procedure Selecionar denuncia por id*/
-DELIMITER $$
-CREATE PROCEDURE selecionar_denuncia(IN id INTEGER)
-BEGIN
-
-  select 
-    d.*,
-    i.nome_imagem
-  from 
-    Denuncias d
-  inner join Imagens_Denuncias i on d.id = i.id_denuncia
-  where d.id = id;
+  COMMIT WORK;
 
 END $$
 DELIMITER ;
