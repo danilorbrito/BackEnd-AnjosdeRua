@@ -18,7 +18,9 @@ Imagens_Denuncias (VINCULADA AS DENUNCIAS)
 */
 
 /*CRIAÇÃO DO BANCO*/
-CREATE DATABASE IF NOT EXISTS anjos_de_rua;
+CREATE DATABASE IF NOT EXISTS anjos_de_rua 
+	DEFAULT CHARACTER SET utf8
+	DEFAULT COLLATE utf8_general_ci;
 
 /*BANCO EM USO*/
 USE anjos_de_rua;
@@ -45,14 +47,14 @@ CREATE TABLE Animais(
 	CONSTRAINT pk_01_animais PRIMARY KEY (id)
 );
 
-/* TABELA IMAGENS_ANIMAIS (VINCULADA AOS ANIMAIS) */
+/* TABELA IMAGENS_ANIMAIS (VINCULADA AOS ANIMAIS) 
 CREATE TABLE Imagens_Animais(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   id_animal INTEGER UNSIGNED NOT NULL,
   nome_imagem TEXT NOT NULL,
   CONSTRAINT pk_01_imagensAnimais PRIMARY KEY (id),
   CONSTRAINT fk_01_imagensAnimais_animais FOREIGN KEY (id_animal) REFERENCES Animais (id)
-);
+);*/
 
 /* TABELA ASSOCIADOS */
 CREATE TABLE Associados(
@@ -121,11 +123,20 @@ CREATE TABLE Denuncias(
 	CONSTRAINT pk_01_denuncias PRIMARY KEY (id)
 );
 
-/* TABELA IMAGENS_DENUNCIAS (VINCULADA AS DENUNCIAS) */
+/* TABELA IMAGENS_DENUNCIAS (VINCULADA AS DENUNCIAS) 
 CREATE TABLE Imagens_Denuncias(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   id_denuncia INTEGER UNSIGNED NOT NULL,
   nome_imagem TEXT NOT NULL,
   CONSTRAINT pk_01_imagensDenuncias PRIMARY KEY (id),
   CONSTRAINT fk_01_imagensDenuncias_denuncias FOREIGN KEY (id_denuncia) REFERENCES Denuncias (id)
+);*/
+
+/*Tabela de imagens para animais e também para animais denunciados*/
+CREATE TABLE Imagens(
+  id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome_imagem TEXT NOT NULL,
+  id_foreign INTEGER NOT NULL,
+  flag VARCHAR(15) NOT NULL,
+  CONSTRAINT pk_imagem PRIMARY KEY (id)
 );
