@@ -10,7 +10,7 @@
         private static $host     = "localhost";
 		private static $user     = "root";
 		private static $pass     = "";
-		private static $dbName   = "anjosderua";
+		private static $dbName   = "anjos_de_rua";
 		private static $Connect  = null; 
 		
 		private static function Conectar()
@@ -19,7 +19,7 @@
 			{
 				if(self::$Connect == null)
 				{
-					self::$Connect = new PDO("mysql:host=".self::$host.";dbname=".self::$dbName."", self::$user, self::$pass);
+					self::$Connect = new PDO("mysql:host=".self::$host.";dbname=".self::$dbName.";charset=utf8", self::$user, self::$pass);
 				}
 			}catch(PDOException $e){
 				PHPErro($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine() );
