@@ -5,7 +5,8 @@ CREATE PROCEDURE inserir_animais(IN nome VARCHAR(30),
                                	 IN raca VARCHAR(35),
                                	 IN cor VARCHAR(25),
                                	 IN idade INTEGER,
-                               	 IN sexo VARCHAR(5))
+                               	 IN sexo VARCHAR(5),
+                                 IN adotado VARCHAR(5))
 BEGIN
 
   SET @var_nome = nome;
@@ -14,14 +15,16 @@ BEGIN
   SET @var_cor = cor;
   SET @var_idade = idade;
   SET @var_sexo = sexo;
+  SET @var_adotado = adotado;
   SET @var_id_animal = 0;
 
   IF (nome = "") THEN SET @var_nome = "Sem Nome"; END IF;
   IF(raca = "") THEN SET @var_raca = "SRD"; END IF;
   IF (idade = "") THEN SET @var_idade = NULL; END IF;
+  IF (adotado = "") THEN SET @var_adotado = "false"; END IF;
 
-  INSERT INTO Animais(nome, descricao, raca, cor, idade, sexo)
-  VALUES(@var_nome, @var_descricao, @var_raca, @var_cor, @var_idade, @var_sexo);
+  INSERT INTO Animais(nome, descricao, raca, cor, idade, sexo, adotado)
+  VALUES(@var_nome, @var_descricao, @var_raca, @var_cor, @var_idade, @var_sexo, @var_adotado);
 
   SELECT LAST_INSERT_ID() INTO @var_id_animal;
 

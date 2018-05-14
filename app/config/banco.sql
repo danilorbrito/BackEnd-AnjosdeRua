@@ -44,6 +44,7 @@ CREATE TABLE Animais(
 	cor VARCHAR(25) NOT NULL,
 	idade INTEGER,
 	sexo VARCHAR(5) NOT NULL,
+	adotado VARCHAR(5) NOT NULL,
 	CONSTRAINT pk_01_animais PRIMARY KEY (id)
 );
 
