@@ -19,3 +19,25 @@ BEGIN
     
 END$
 DELIMITER ;
+
+DELIMITER $
+CREATE TRIGGER Adocao_delete before delete 
+on Adocoes
+FOR EACH ROW
+BEGIN
+    delete from Mensagens_Adocoes where id_adocao = old.id;
+    
+END$
+DELIMITER ;
+
+DELIMITER $
+CREATE TRIGGER Associado_delete before delete 
+on Associados
+FOR EACH ROW
+BEGIN
+    delete from Adocoes where id_associado = old.id;
+    delete from Enderecos where id_associado = old.id;
+    delete from Telefones where id_associado = old.id;
+    
+END$
+DELIMITER ;
