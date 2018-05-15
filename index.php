@@ -68,7 +68,7 @@
     //End Points Animais
 
     //End Points Imagens_animais
-        Router::post('/imagens_animais', function() {
+        Router::post('/animais/imagens', function() {
             Router::validateJwt();//Rota protegida por JWT
             $imgAnimal = new ImagemAnimal();
 
@@ -78,12 +78,12 @@
                 Router::Json( 400 );
         });
 
-        Router::get('/imagens_animais', function() {
+        Router::get('/animais/imagens', function() {
             $imgAnimal = new ImagemAnimal();
             Router::Json($imgAnimal->all());
         });
 
-        Router::delete('/imagens_animais/{id}', function($params) {
+        Router::delete('/animais/imagens/{id}', function($params) {
             Router::validateJwt();//Rota protegida por JWT
             $imgAnimal = new ImagemAnimal();
 
@@ -138,7 +138,7 @@
     //End Points para Denuncias
 
     //End Points Imagens_denuncias
-        Router::post('/imagens_denuncias', function() {
+        Router::post('/denuncias/imagens', function() {
             Router::validateJwt();//Rota protegida por JWT
             $imgDenuncia = new ImagemDenuncia();
 
@@ -148,13 +148,13 @@
                 Router::Json( 400 );
         });
 
-        Router::get('/imagens_denuncias', function() {
+        Router::get('/denuncias/imagens', function() {
             Router::validateJwt();//Rota protegida por JWT
             $imgDenuncia = new ImagemDenuncia();
             Router::Json( $imgDenuncia->all() );
         });
 
-        Router::delete('/imagens_denuncias/{id}', function($params) {
+        Router::delete('/denuncias/imagens/{id}', function($params) {
             Router::validateJwt();//Rota protegida por JWT
             $imgDenuncia = new ImagemDenuncia();
 
