@@ -97,7 +97,7 @@ CREATE TABLE Adocoes(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	id_animal INTEGER UNSIGNED NOT NULL,
 	id_associado INTEGER UNSIGNED NOT NULL,
-	dt_adocao DATETIME NOT NULL DEFAULT NOW(),
+	datahora DATETIME NOT NULL DEFAULT NOW(),
 	CONSTRAINT pk_01_adocoes PRIMARY KEY (id),
 	CONSTRAINT fk_01_adocoes_animais FOREIGN KEY (id_animal) REFERENCES Animais (id),
 	CONSTRAINT fk_02_adocoes_associados FOREIGN KEY (id_associado) REFERENCES Associados (id)
@@ -109,7 +109,7 @@ CREATE TABLE Mensagens_Adocoes(
 	id_adocao INTEGER UNSIGNED NOT NULL,
 	mensagem TEXT NOT NULL,
 	remetente VARCHAR(22) NOT NULL DEFAULT "Anjos De Rua - Adoções",
-	dt_mensagem DATETIME NOT NULL DEFAULT NOW(),
+	datahora DATETIME NOT NULL DEFAULT NOW(),
 	CONSTRAINT pk_01_mensagensAdocoes PRIMARY KEY (id),
 	CONSTRAINT fk_01_mensagensAdocoes_adocoes FOREIGN KEY (id_adocao) REFERENCES Adocoes (id)
 );
