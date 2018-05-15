@@ -141,3 +141,11 @@ CREATE TABLE Imagens(
   flag VARCHAR(15) NOT NULL,
   CONSTRAINT pk_imagem PRIMARY KEY (id)
 );
+
+/*tabela para ações promovidas pela instituição*/
+CREATE TABLE Acoes_Promovidas(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	titulo VARCHAR(100),
+	texto LONGTEXT,
+	CONSTRAINT pk_acoes PRIMARY KEY(id)
+);
