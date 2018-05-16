@@ -24,13 +24,13 @@
         //retorna todas as mensagens
         public function all() 
         {
-            return Conn::getConn()->query("SELECT * FROM Mensagens_Adocoes")->fetchAll(PDO::FETCH_ASSOC);
+            return Conn::getConn()->query("SELECT * FROM mensagens_adocoes")->fetchAll(PDO::FETCH_ASSOC);
         }
 
         //retorna todas as mensagens
         public function findByAdocao($id) 
         {
-            $st = Conn::getConn()->prepare(" SELECT * FROM Mensagens_Adocoes WHERE id_adocao=? ");
+            $st = Conn::getConn()->prepare(" SELECT * FROM mensagens_adocoes WHERE id_adocao=? ");
             $st->bindParam(1, $id);
             $st->execute();
             return $st->fetchAll(PDO::FETCH_ASSOC);

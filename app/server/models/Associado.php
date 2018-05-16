@@ -54,20 +54,20 @@
 
         public function buscarTel($id_associado)
         {
-            $st = Conn::getConn()->query("select id, numero, tipo from Telefones where id_associado=".$id_associado);
+            $st = Conn::getConn()->query("select id, numero, tipo from telefones where id_associado=".$id_associado);
             return $st->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function buscarEnd($id_associado)
         {
-            $st = Conn::getConn()->query("select id, logradouro, numero, complemento, bairro, cep, cidade, estado from Enderecos where id_associado=".$id_associado);
+            $st = Conn::getConn()->query("select id, logradouro, numero, complemento, bairro, cep, cidade, estado from enderecos where id_associado=".$id_associado);
             return $st->fetch(PDO::FETCH_ASSOC);
         }
 
         //retorna todos os associados
         public function all() 
         {
-            $st = Conn::getConn()->query("select * from Associados");
+            $st = Conn::getConn()->query("select * from associados");
             $result = $st->fetchAll(PDO::FETCH_ASSOC);
             $st->closeCursor();
             if($result == true)
@@ -87,7 +87,7 @@
         //retorna associado pelo id
         public function find($id) 
         {
-            $st = Conn::getConn()->query("select * from Associados where id=".$id);
+            $st = Conn::getConn()->query("select * from associados where id=".$id);
             $result = $st->fetch(PDO::FETCH_ASSOC);
             $st->closeCursor();
             if($result == true)
@@ -132,14 +132,14 @@
                         {
                             if($tel->numero <> "")
                             {
-                                $st02 = Conn::getConn()->prepare("update Telefones set numero=?, tipo=? where id=?");
+                                $st02 = Conn::getConn()->prepare("update telefones set numero=?, tipo=? where id=?");
                                 $st02->bindParam(1, $tel->numero);
                                 $st02->bindParam(2, $tel->tipo);
                                 $st02->bindParam(3, $tel->id);
                                 $st02->execute();
                             }
                             else
-                                $st02 = Conn::getConn()->query("delete from Telefones where id=".$tel->id);
+                                $st02 = Conn::getConn()->query("delete from telefones where id=".$tel->id);
                         }
                         else
                             self::inserirTel($associado->id, $tel->numero, $tel->tipo);
@@ -156,7 +156,7 @@
         //deleta associado pelo id
         public function trash( $id )
         {
-            $st = Conn::getConn()->prepare(" DELETE FROM Associados WHERE id=? ");
+            $st = Conn::getConn()->prepare("DELETE FROM associados WHERE id=?");
             $st->bindParam(1, $id);
             return $st->execute();
         }
