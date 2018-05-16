@@ -45,7 +45,7 @@
             //valida os campos obrigatórios antes
             if( $animal->id <> "" and $animal->nome <> "" and $animal->descricao <> "" and $animal->raca <> "" and $animal->cor <> "" and $animal->idade <> "" and $animal->sexo <> "" )
             {
-                $st = Conn::getConn()->prepare(" UPDATE animais SET nome=?, descricao=?, raca=?, cor=?, idade=?, sexo=?, adotado=? WHERE id=? ");
+                $st = Conn::getConn()->prepare("UPDATE animais SET nome=?, descricao=?, raca=?, cor=?, idade=?, sexo=?, adotado=? WHERE id=?");
 
                 $st->bindParam(1, $animal->nome);
                 $st->bindParam(2, $animal->descricao);
@@ -64,7 +64,7 @@
         //deleta animal pelo id
         public function trash( $id )
         {
-            $imagens = Conn::getConn()->query("select nome_imagem from Imagens where flag='animal' and id_foreign=".$id)->fetchAll(PDO::FETCH_ASSOC);
+            $imagens = Conn::getConn()->query("select nome_imagem from imagens where flag='animal' and id_foreign=".$id)->fetchAll(PDO::FETCH_ASSOC);
             if (Conn::getConn()->query("delete from animais where id=".$id) == true)//tem uma trigger no mysql que remove os registro 
             {                                                                       //na tabela imagens_animais relacinado ao id do animal
                 foreach ($imagens as $img)

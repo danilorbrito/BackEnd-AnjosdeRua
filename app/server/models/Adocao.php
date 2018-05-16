@@ -42,7 +42,7 @@
         //retorna todas as adocoes
         public function all() 
         {
-            $st = Conn::getConn()->query("select * from Adocoes");
+            $st = Conn::getConn()->query("select * from adocoes");
             $result = $st->fetchAll(PDO::FETCH_ASSOC);
             $st->closeCursor();
             if($result == true)
@@ -60,7 +60,7 @@
         //retorna adocao pelo id
         public function find($id) 
         {
-            $st = Conn::getConn()->query("SELECT * FROM Adocoes WHERE id=".$id);
+            $st = Conn::getConn()->query("SELECT * FROM adocoes WHERE id=".$id);
             $result = $st->fetch(PDO::FETCH_ASSOC);
             $st->closeCursor();
             if ($result == true)
@@ -74,8 +74,8 @@
         public function findByAssociado($id) 
         {
             $st = Conn::getConn()->query("select an.id, an.nome, an.descricao, an.raca, an.cor, an.idade, an.sexo, an.adotado 
-                                            FROM Animais an
-                                            inner join Adocoes ad on an.id = ad.id_animal
+                                            FROM animais an
+                                            inner join adocoes ad on an.id = ad.id_animal
                                             WHERE id_associado=".$id);
             return $st->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -86,7 +86,7 @@
             //valida os campos obrigatórios antes
             if( $adocao->id <> "" and $adocao->id_animal <> "" and $adocao->id_associado <> "" and $adocao->data <> "" )
             {
-                $st = Conn::getConn()->prepare("UPDATE Adocoes SET id_animal=?, id_associado=?, datahora=? WHERE id=?");
+                $st = Conn::getConn()->prepare("UPDATE adocoes SET id_animal=?, id_associado=?, datahora=? WHERE id=?");
                 $st->bindParam(1, $adocao->id_animal);
                 $st->bindParam(2, $adocao->id_associado);
                 $st->bindParam(3, $adocao->data);
@@ -100,7 +100,7 @@
         //deleta adocao pelo id
         public function trash( $id )
         {
-            $st = Conn::getConn()->prepare(" DELETE FROM Adocoes WHERE id=? ");
+            $st = Conn::getConn()->prepare("DELETE FROM adocoes WHERE id=?");
             $st->bindParam(1, $id);
             return $st->execute();
             //uma trigger vai setar o campo adotado do animal como false
