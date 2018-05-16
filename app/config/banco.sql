@@ -30,7 +30,7 @@ CREATE TABLE Admin(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	nome VARCHAR(75) NOT NULL,
 	login VARCHAR(50) NOT NULL,
-	senha VARCHAR(50) NOT NULL,
+	pass VARCHAR(50) NOT NULL,
 	CONSTRAINT pk_01_admin PRIMARY KEY (id)
 );
 
@@ -44,6 +44,7 @@ CREATE TABLE Animais(
 	cor VARCHAR(25) NOT NULL,
 	idade INTEGER,
 	sexo VARCHAR(5) NOT NULL,
+	adotado VARCHAR(5) NOT NULL,
 	CONSTRAINT pk_01_animais PRIMARY KEY (id)
 );
 
@@ -62,7 +63,7 @@ CREATE TABLE Associados(
 	nome VARCHAR(80) NOT NULL,
 	sexo VARCHAR(10) NOT NULL,
 	email VARCHAR(70),
-	senha VARCHAR(50) NOT NULL,
+	pass VARCHAR(50) NOT NULL,
 	CONSTRAINT pk_01_associados PRIMARY KEY (id)
 );
 
@@ -96,7 +97,7 @@ CREATE TABLE Adocoes(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	id_animal INTEGER UNSIGNED NOT NULL,
 	id_associado INTEGER UNSIGNED NOT NULL,
-	dt_adocao DATETIME NOT NULL DEFAULT NOW(),
+	datahora DATETIME NOT NULL DEFAULT NOW(),
 	CONSTRAINT pk_01_adocoes PRIMARY KEY (id),
 	CONSTRAINT fk_01_adocoes_animais FOREIGN KEY (id_animal) REFERENCES Animais (id),
 	CONSTRAINT fk_02_adocoes_associados FOREIGN KEY (id_associado) REFERENCES Associados (id)
@@ -108,7 +109,7 @@ CREATE TABLE Mensagens_Adocoes(
 	id_adocao INTEGER UNSIGNED NOT NULL,
 	mensagem TEXT NOT NULL,
 	remetente VARCHAR(22) NOT NULL DEFAULT "Anjos De Rua - Adoções",
-	dt_mensagem DATETIME NOT NULL DEFAULT NOW(),
+	datahora DATETIME NOT NULL DEFAULT NOW(),
 	CONSTRAINT pk_01_mensagensAdocoes PRIMARY KEY (id),
 	CONSTRAINT fk_01_mensagensAdocoes_adocoes FOREIGN KEY (id_adocao) REFERENCES Adocoes (id)
 );
@@ -139,4 +140,12 @@ CREATE TABLE Imagens(
   id_foreign INTEGER NOT NULL,
   flag VARCHAR(15) NOT NULL,
   CONSTRAINT pk_imagem PRIMARY KEY (id)
+);
+
+/*tabela para ações promovidas pela instituição*/
+CREATE TABLE Acoes_Promovidas(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	titulo VARCHAR(100),
+	texto LONGTEXT,
+	CONSTRAINT pk_acoes PRIMARY KEY(id)
 );

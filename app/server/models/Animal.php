@@ -11,13 +11,14 @@
             //valida os campos obrigatórios antes
             if( $animal->descricao <> "" and $animal->cor <> "" and $animal->sexo <> "" )
             {
-                $st = Conn::getConn()->prepare("call inserir_animais(?,?,?,?,?,?)");//essa procedure adiciona o nome da imagem do animal na tabela imagens_animais
+                $st = Conn::getConn()->prepare("call inserir_animais(?,?,?,?,?,?,?)");//essa procedure adiciona o nome da imagem do animal na tabela imagens_animais
                 $st->bindParam(1, $animal->nome);//não precisa ser verificado, caso nulo a procedure colocara um valor padrao                                     
                 $st->bindParam(2, $animal->descricao);
                 $st->bindParam(3, $animal->raca);//não precisa ser verificado, caso nulo a procedure colocara um valor padrao
                 $st->bindParam(4, $animal->cor);
                 $st->bindParam(5, $animal->idade);//não precisa ser verificado, caso nulo a procedure colocara um valor padrao
                 $st->bindParam(6, $animal->sexo);
+                $st->bindParam(7, $animal->adotado);//não precisa ser verificado, caso nulo a procedure colocara um valor padrao
                 $st->execute();
                 return $st->fetch(PDO::FETCH_ASSOC);
             }
@@ -44,7 +45,7 @@
             //valida os campos obrigatórios antes
             if( $animal->id <> "" and $animal->nome <> "" and $animal->descricao <> "" and $animal->raca <> "" and $animal->cor <> "" and $animal->idade <> "" and $animal->sexo <> "" )
             {
-                $st = Conn::getConn()->prepare(" UPDATE animais SET nome=?, descricao=?, raca=?, cor=?, idade=?, sexo=? WHERE id=? ");
+                $st = Conn::getConn()->prepare(" UPDATE animais SET nome=?, descricao=?, raca=?, cor=?, idade=?, sexo=?, adotado=? WHERE id=? ");
 
                 $st->bindParam(1, $animal->nome);
                 $st->bindParam(2, $animal->descricao);
@@ -52,7 +53,8 @@
                 $st->bindParam(4, $animal->cor);
                 $st->bindParam(5, $animal->idade);
                 $st->bindParam(6, $animal->sexo);
-                $st->bindParam(7, $animal->id);
+                $st->bindParam(7, $animal->adotado);
+                $st->bindParam(8, $animal->id);
                 return $st->execute();
             }
             else

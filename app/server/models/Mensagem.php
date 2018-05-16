@@ -8,13 +8,13 @@
         public function save( $mensagem )
         {
             //valida os campos obrigatórios antes
-            if( $mensagem->idadocao <> "" and $mensagem->mensagem <> "" and $mensagem->remetente <> "" and $mensagem->datahora <> "")
+            if( $mensagem->id_adocao <> "" and $mensagem->mensagem <> "" )
             {
-                $st = Conn::getConn()->prepare("insert into mensagens(idadocao, mensagem, remetente, datahora) values(?,?,?,?)");
-                $st->bindParam(1, $mensagem->idadocao);
+                $st = Conn::getConn()->prepare("insert into mensagens_adocoes(id_adocao, mensagem, remetente, datahora) values(?,?,?,?)");
+                $st->bindParam(1, $mensagem->id_adocao);
                 $st->bindParam(2, $mensagem->mensagem);
-                $st->bindParam(3, $mensagem->remetente);
-                $st->bindParam(4, $mensagem->datahora);
+                $st->bindParam(3, $mensagem->remetente);//não precisa ser verificado, a procedure vai colocar um valor padrão
+                $st->bindParam(4, $mensagem->datahora);//não precisa ser verificado, a procedure vai colocar um valor padrão
                 return $st->execute();
             }
             else
@@ -24,13 +24,13 @@
         //retorna todas as mensagens
         public function all() 
         {
-            return Conn::getConn()->query("SELECT * FROM Mensagens")->fetchAll(PDO::FETCH_ASSOC);
+            return Conn::getConn()->query("SELECT * FROM Mensagens_Adocoes")->fetchAll(PDO::FETCH_ASSOC);
         }
 
         //retorna todas as mensagens
         public function findByAdocao($id) 
         {
-            $st = Conn::getConn()->prepare(" SELECT * FROM mensagens WHERE idadocao=? ");
+            $st = Conn::getConn()->prepare(" SELECT * FROM Mensagens_Adocoes WHERE id_adocao=? ");
             $st->bindParam(1, $id);
             $st->execute();
             return $st->fetchAll(PDO::FETCH_ASSOC);
