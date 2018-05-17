@@ -101,6 +101,7 @@ CREATE TABLE mensagens_adocoes(
 	mensagem TEXT NOT NULL,
 	remetente VARCHAR(22) NOT NULL DEFAULT "Anjos De Rua - Adoções",
 	datahora DATETIME NOT NULL DEFAULT NOW(),
+	lida BOOLEAN NOT NULL DEFAULT FALSE,
 	CONSTRAINT pk_01_mensagensAdocoes PRIMARY KEY (id),
 	CONSTRAINT fk_01_mensagensAdocoes_adocoes FOREIGN KEY (id_adocao) REFERENCES adocoes (id)
 );
