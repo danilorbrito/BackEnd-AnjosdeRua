@@ -26,7 +26,7 @@ CREATE TRIGGER adocao_insere after insert
 on adocoes
 FOR EACH ROW
 BEGIN
-    update animais set adotado="true" where id = new.id_animal;
+    update animais set adotado=1 where id = new.id_animal;
 END$
 DELIMITER ;
 
@@ -35,13 +35,13 @@ CREATE TRIGGER adocao_delete before delete
 on adocoes
 FOR EACH ROW
 BEGIN
-    set @var_animal_adotado = '';
+    set @var_animal_adotado = 0;
     
     delete from mensagens_adocoes where id_adocao = old.id;
     select adotado into @var_animal_adotado from animais where id = old.id_animal;
 
-    if(@var_animal_adotado = "true") then
-        update animais set adotado="false" where id = old.id_animal;
+    if(@var_animal_adotado = 1) then
+        update animais set adotado=0 where id = old.id_animal;
     end if;
 
 END$
