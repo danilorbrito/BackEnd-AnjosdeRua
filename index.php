@@ -290,6 +290,16 @@
             else 
                 Router::Json( 400 );
         });
+
+        Router::post('/mensagens/status', function() {
+            Router::validateJwt();//Rota protegida por JWT
+            $mensagem = new Mensagem();
+
+            if( $mensagem->modifyStatus( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
     //End Points para Mensagens
 
     //End Points para Ações Promovidas
