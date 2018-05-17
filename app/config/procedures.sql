@@ -21,7 +21,7 @@ BEGIN
   IF (nome = "") THEN SET @var_nome = "Sem Nome"; END IF;
   IF(raca = "") THEN SET @var_raca = "SRD"; END IF;
   IF (idade = "") THEN SET @var_idade = NULL; END IF;
-  IF (adotado = "") THEN SET @var_adotado = "false"; END IF;
+  IF (adotado = "") THEN SET @var_adotado = 0; END IF;
 
   INSERT INTO animais(nome, descricao, raca, cor, idade, sexo, adotado)
   VALUES(@var_nome, @var_descricao, @var_raca, @var_cor, @var_idade, @var_sexo, @var_adotado);
@@ -181,7 +181,7 @@ DELIMITER $$
 CREATE PROCEDURE delete_animais(IN id_animal INTEGER)
 BEGIN
 
-  update animais set adotado="false" where id = id_animal;
+  update animais set adotado=0 where id = id_animal;
   delete from animais where id = id_animal;
 
   COMMIT WORK;
