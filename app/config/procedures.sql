@@ -177,4 +177,13 @@ BEGIN
 END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE PROCEDURE delete_animais(IN id_animal INTEGER)
+BEGIN
 
+  update animais set adotado="false" where id = id_animal;
+  delete from animais where id = id_animal;
+
+  COMMIT WORK;
+END $$
+DELIMITER ;

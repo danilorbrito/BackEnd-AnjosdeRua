@@ -3,8 +3,10 @@ CREATE TRIGGER animais_delete before delete
 on animais
 FOR EACH ROW
 BEGIN
+
     delete from imagens where id_foreign = old.id and flag="animal";
-    
+    delete from adocoes where id_animal = old.id;
+
 END$
 
 DELIMITER ;
@@ -33,8 +35,15 @@ CREATE TRIGGER adocao_delete before delete
 on adocoes
 FOR EACH ROW
 BEGIN
+    set @var_animal_adotado = '';
+    
     delete from mensagens_adocoes where id_adocao = old.id;
-    update animais set adotado="false" where id = old.id_animal;
+    select adotado into @var_animal_adotado from animais where id = old.id_animal;
+
+    if(@var_animal_adotado = "true") then
+        update animais set adotado="false" where id = old.id_animal;
+    end if;
+
 END$
 DELIMITER ;
 
