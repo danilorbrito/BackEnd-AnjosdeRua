@@ -30,9 +30,22 @@
         //retorna todas as mensagens
         public function findByAdocao($id) 
         {
-            $st = Conn::getConn()->prepare(" SELECT * FROM mensagens_adocoes WHERE id_adocao=? ");
+            $st = Conn::getConn()->prepare("SELECT * FROM mensagens_adocoes WHERE id_adocao=?");
             $st->bindParam(1, $id);
             $st->execute();
             return $st->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        //modifica o status da mensagem
+        public function modifyStatus( $obj )
+        {   
+            if($obj->id <> "" and $obj->status <> "")
+            {
+                $st = Conn::getConn()->prepare("update mensagens_adocoes set lida=? where id=?");
+                $st->bindParam(1, $obj->status);
+                $st->bindParam(2, $obj->id);
+                return $st->execute();
+            }
+            return false;
         }
     }
