@@ -6,6 +6,7 @@
 		protected static $params   = array();
 		protected static $folder;
 		protected static $notFound = true;
+		protected static $input;
 
 		private static function compareParams($URI, $endPoint)
 		{
@@ -37,6 +38,8 @@
 
 		private static function testURI($endPoint, $_callback)
 		{
+			self::$input = file_get_contents("php://input");
+			
 			//recupera o nome do dirroot, pois esta na uri. Mas é necessário remover \app\server
 			self::$folder = __DIR__;
 			self::$folder = str_replace("\app\server\controllers", "", self::$folder);
@@ -65,7 +68,7 @@
 				if($_SERVER['REQUEST_METHOD'] == "PUT") 
 				{
 					$arrayPut = array();
-					parse_str(file_get_contents("php://input"), $arrayPut);
+					parse_str(self::$input, $arrayPut);
 					foreach($arrayPut as $key => $value)
 					{
 						self::$params[$key] = $value;
@@ -105,9 +108,7 @@
 		 */
 		public static function getJson()
 		{
-			$input  = file_get_contents("php://input");
-			$input  = json_decode($input);
-			return (gettype( $input ) == "string") ? json_decode($input) : $input;
+			return (gettype( self::$input ) == "string") ? json_decode( self::$input ) : self::$input;
 		}
 
 		public static function notFound( $template )
