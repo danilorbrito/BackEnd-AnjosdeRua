@@ -1,5 +1,8 @@
 <?php    
     header('Access-Control-Allow-Origin: *'); 
+    header("Access-Control-Allow-Credentials: false");
+    header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE');
+    header('Access-Control-Allow-Headers: Authorization, content-type');
     header("Content-type:text/html; charset=utf-8");
     require_once('./vendor/autoload.php');
 
