@@ -49,7 +49,7 @@ DELIMITER ;
 
 DELIMITER $
 CREATE TRIGGER associado_delete before delete 
-on Associados
+on associados
 FOR EACH ROW
 BEGIN
     delete from adocoes where id_associado = old.id;
