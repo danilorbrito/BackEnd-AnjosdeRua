@@ -39,11 +39,10 @@
         //modifica o status da mensagem
         public function modifyStatus( $obj )
         {   
-            if($obj->id <> "" and $obj->status <> "")
+            if($obj->id_adocao <> "")
             {
-                $st = Conn::getConn()->prepare("update mensagens_adocoes set lida=? where id=?");
-                $st->bindParam(1, $obj->status);
-                $st->bindParam(2, $obj->id);
+                $st = Conn::getConn()->prepare("update mensagens_adocoes set lida=1 where id_adocao=?");
+                $st->bindParam(1, $obj->id_adocao);
                 return $st->execute();
             }
             return false;

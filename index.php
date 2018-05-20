@@ -291,7 +291,7 @@
                 Router::Json( 400 );
         });
 
-        Router::post('/mensagens/status', function() {
+        Router::put('/mensagens/visualizadas', function() {
             Router::validateJwt();//Rota protegida por JWT
             $mensagem = new Mensagem();
 
