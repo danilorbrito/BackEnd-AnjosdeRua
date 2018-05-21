@@ -11,11 +11,11 @@
         public function save( $adocao )
         {
             //valida os campos obrigatórios antes
-            if( $adocao->id_animal <> "" and $adocao->id_associado <> "" )
+            if( $adocao->animal->id <> "" and $adocao->associado->id <> "" )
             {
                 $st = Conn::getConn()->prepare("insert into adocoes(id_animal,id_associado) values(?,?)");
-                $st->bindParam(1, $adocao->id_animal);
-                $st->bindParam(2, $adocao->id_associado);
+                $st->bindParam(1, $adocao->animal->id);
+                $st->bindParam(2, $adocao->associado->id);
                 return $st->execute();
                 //uma trigger vai setar o campo adotado do animal como true
             }
@@ -56,7 +56,7 @@
                 }
                 return $retorno;
             }
-            return '';
+            return [];
         }
 
         //retorna adocao pelo id
@@ -86,11 +86,11 @@
         public function update( $adocao )
         {
             //valida os campos obrigatórios antes
-            if( $adocao->id <> "" and $adocao->id_animal <> "" and $adocao->id_associado <> "" and $adocao->data <> "" )
+            if( $adocao->id <> "" and $adocao->animal->id <> "" and $adocao->associado->id <> "" and $adocao->data <> "" )
             {
                 $st = Conn::getConn()->prepare("UPDATE adocoes SET id_animal=?, id_associado=?, datahora=? WHERE id=?");
-                $st->bindParam(1, $adocao->id_animal);
-                $st->bindParam(2, $adocao->id_associado);
+                $st->bindParam(1, $adocao->animal->id);
+                $st->bindParam(2, $adocao->associado->id);
                 $st->bindParam(3, $adocao->data);
                 $st->bindParam(4, $adocao->id);
                 return $st->execute();
@@ -104,7 +104,10 @@
         {
             $st = Conn::getConn()->prepare("DELETE FROM adocoes WHERE id=?");
             $st->bindParam(1, $id);
-            return $st->execute();
+            $st->execute();
+            if($st->rowCount() > 0)
+                return true;
+            return false;
             //uma trigger vai setar o campo adotado do animal como false
         }
     }
