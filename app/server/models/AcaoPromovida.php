@@ -36,9 +36,7 @@
                 $st->bindParam(2, $acao->texto);
                 $st->bindParam(3, $acao->id);
                 $st->execute();
-                if($st->rowCount() > 0)
-                    return true;
-                return false;   
+                return $st->execute();   
             } 
 
             return false;
