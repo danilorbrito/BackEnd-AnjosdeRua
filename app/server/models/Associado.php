@@ -81,7 +81,7 @@
                 }
                 return $retorno;
             }
-            return '';
+            return [];
         }
 
         //retorna associado pelo id
@@ -158,7 +158,10 @@
         {
             $st = Conn::getConn()->prepare("DELETE FROM associados WHERE id=?");
             $st->bindParam(1, $id);
-            return $st->execute();
+            $st->execute();
+            if($st->rowCount() > 0)
+                return true;
+            return false;
         }
 
     }

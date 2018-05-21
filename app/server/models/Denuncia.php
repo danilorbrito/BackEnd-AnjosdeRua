@@ -32,8 +32,11 @@
         public function trash( $id )
         {
             $imagens = Conn::getConn()->query("select nome_imagem from imagens where flag='denunciada' and id_foreign=".$id)->fetchAll(PDO::FETCH_ASSOC);
-            if (Conn::getConn()->query("delete from denuncias where id=".$id) == true)//tem uma trigger no mysql que remove os registro 
-            {                                                                       //na tabela imagens_denuncias relacinado ao id da denuncia
+            $st = Conn::getConn()->prepare("delete from denuncias where id=?");
+            $st->bindParam(1, $id);
+            $st->execute();
+            if ($st->rowCount() > 0)//tem uma trigger no mysql que remove os registro na tabela imagens_denuncias relacinado ao id da denuncia
+            {
                 foreach ($imagens as $img)
                 {
                     unlink("./app/client/assets/imagens/denunciadas/".$img["nome_imagem"]);
