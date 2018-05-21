@@ -77,6 +77,7 @@
                 {
                     $res['endereco'] = self::buscarEnd($res['id']);
                     $res['telefones'] = self::buscarTel($res['id']);
+                    unset($res['pass']);
                     $retorno[] = $res;
                 }
                 return $retorno;
@@ -94,6 +95,7 @@
             {   
                 $result['endereco'] = self::buscarEnd($id);
                 $result['telefones'] = self::buscarTel($id);
+                unset($result['pass']);
                 return $result;
             }
             return false;
