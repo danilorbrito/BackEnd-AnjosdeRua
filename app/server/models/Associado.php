@@ -11,7 +11,7 @@
             //valida os campos obrigatórios antes
             if($associado->nome <> "" and $associado->sexo <> "" and $associado->pass <> "" and
                $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and $associado->endereco->cep <> "" and
-               $associado->endereco->cidade <> "" and $associado->endereco->estado <> "" and count($associado->telefones) <> 0)
+               $associado->endereco->cidade <> "" and $associado->endereco->estado <> "")
             {
                 
                 $hashMd5 = md5($associado->pass);
@@ -108,7 +108,7 @@
             //valida os campos obrigatórios antes
             if($associado->id <> "" and $associado->nome <> "" and $associado->sexo <> "" and $associado->endereco->id <> "" and
                $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and $associado->endereco->cep <> "" and
-               $associado->endereco->cidade <> "" and $associado->endereco->estado <> "" and count($associado->telefones) <> 0)
+               $associado->endereco->cidade <> "" and $associado->endereco->estado <> "")
             {
                 $hashMd5 = md5($associado->pass);
                 $st = Conn::getConn()->prepare("call update_associados(?,?,?,?,?,?,?,?,?,?,?,?,?)");
