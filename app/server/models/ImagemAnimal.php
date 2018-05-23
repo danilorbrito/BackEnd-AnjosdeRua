@@ -19,11 +19,16 @@
             return false;
         }
 
-        public function all()
+        public function find($id)
+        {
+            return Conn::getConn()->query("select * from imagens where flag='animal' and id_foreign=".$id)->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+		public function all()
         {
             return Conn::getConn()->query("select * from imagens where flag='animal'")->fetchAll(PDO::FETCH_ASSOC);
         }
-
+		
         public function trash($id) 
         {
             $imagem = Conn::getConn()->query("select nome_imagem from imagens where id=".$id)->fetch(PDO::FETCH_ASSOC);

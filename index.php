@@ -19,6 +19,7 @@
     use app\server\controllers\Upload;
     Router::dev();
 
+	
     //TEMPLATE Principal
     Router::get('/', function() {
         Router::View("./app/client/index.html");
@@ -53,11 +54,12 @@
         Router::put('/animais', function() {
             Router::validateJwt();//Rota protegida por JWT
             $animal = new Animal();
-            
+
             if( $animal->update( Router::getJson() ) )
                 Router::Json( 200 );
             else 
                 Router::Json( 400 );
+
         });
 
         Router::delete('/animais/{id}', function($params) {
@@ -82,9 +84,9 @@
                 Router::Json( 400 );
         });
 
-        Router::get('/imagens/animais', function() {
+        Router::get('/imagens/animais/{id}', function($params) {
             $imgAnimal = new ImagemAnimal();
-            Router::Json($imgAnimal->all());
+            Router::Json($imgAnimal->find($params->id));
         });
 
         Router::delete('/imagens/animais/{id}', function($params) {
@@ -254,6 +256,7 @@
                 Router::Json( 200 );
             else 
                 Router::Json( 400 );
+
         });
 
         Router::delete('/adocoes/{id}', function($params) {
@@ -316,13 +319,13 @@
 
     //End Points para Ações Promovidas
         Router::get('/acoespromovidas', function() {
-            Router::validateJwt();//Rota protegida por JWT
+            //Router::validateJwt();//Rota protegida por JWT
             $acProm = new AcaoPromovida();
             Router::Json( $acProm->all() );
         });
 
         Router::get('/acoespromovidas/{id}', function($params) {
-            Router::validateJwt();//Rota protegida por JWT
+            //Router::validateJwt();//Rota protegida por JWT
             $acProm = new AcaoPromovida();
             Router::Json( $acProm->find($params->id) );
         });
