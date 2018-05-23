@@ -187,3 +187,23 @@ BEGIN
   COMMIT WORK;
 END $$
 DELIMITER ;
+
+/* Procedure Mensagens */
+DELIMITER $$
+CREATE PROCEDURE inserir_mesagens_adocao(IN id_adocao INTEGER,
+                                   IN mensagem TEXT,
+                                   IN remetente VARCHAR(100),
+                                   IN datahora datetime)
+BEGIN
+  SET @var_remetente = remetente;
+  SET @var_dthora = datahora;
+  IF(remetente = "") THEN SET @var_remetente = "admin"; END IF;
+  IF(datahora = "") THEN SET @var_dthora = NOW(); END IF;
+
+  INSERT INTO mensagens_adocoes(id_adocao, mensagem, remetente, datahora)
+  VALUES(id_adocao, mensagem, @var_remetente, @var_dthora);
+
+  COMMIT WORK;
+
+END $$
+DELIMITER ;
