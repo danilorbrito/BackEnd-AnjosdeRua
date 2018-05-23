@@ -281,6 +281,18 @@
             Router::Json( $mensagem->findByAdocao( $params->id ) );
         });
 
+        Router::get('/mensagens/visualizar/admin/{id_adocao}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $mensagem = new Mensagem();
+            Router::Json( $mensagem->messagesForAdmin($params->id_adocao) );
+        });
+
+        Router::get('/mensagens/visualizar/associado/{id_associado}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $mensagem = new Mensagem();
+            Router::Json( $mensagem->messagesForAssociado( $params->id_associado ) );
+        });
+
         Router::post('/mensagens', function() {
             Router::validateJwt();//Rota protegida por JWT
             $mensagem = new Mensagem();

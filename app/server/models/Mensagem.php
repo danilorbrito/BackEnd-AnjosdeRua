@@ -47,4 +47,23 @@
             }
             return false;
         }
+
+        public function messagesForAdmin( $id_adocao ) {
+            return Conn::getConn()->query("call select_mensagens_admin(".$id_adocao.")")->fetch(PDO::FETCH_ASSOC);
+        }
+
+        public function messagesForAssociado( $id_associado ) {
+            $st = Conn::getConn()->prepare("call select_mensagens_assoc(?)");
+            $st->bindParam(1, $id_associado);
+            $st->execute();
+            if($st->rowCount() > 0)
+            {
+                $retorno = array();
+                foreach($st->fetchAll(PDO::FETCH_ASSOC) as $item)
+                    if($item['total'] > 0) $retorno[] = $item;
+                
+                return $retorno;
+            }
+            return [];
+        }
     }

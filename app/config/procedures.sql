@@ -207,3 +207,29 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+/*Retorna o total de mensagens não lidas para o Admin*/
+DELIMITER $$
+CREATE PROCEDURE select_mensagens_admin( IN id_adocao INTEGER )
+BEGIN 
+
+  select count(md.id) as total from  mensagens_adocoes md
+  where md.id_adocao = id_adocao and md.remetente <> "admin" and md.lida = 0;
+
+END $$
+DELIMITER ;
+
+/*Retorna o total de mensagens e o ID da adoção das mensagens não lidas para o Associado*/
+DELIMITER $$
+CREATE PROCEDURE select_mensagens_assoc( IN id_associado INTEGER )
+BEGIN 
+
+  select 
+    ad.id as id_adocao,
+    (select count(id) from mensagens_adocoes 
+    where id_adocao = ad.id and remetente = "admin" and lida = 0) as total
+  from  adocoes ad
+  where ad.id_associado = id_associado;
+
+END $$
+DELIMITER ;
