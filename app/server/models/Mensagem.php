@@ -54,7 +54,7 @@
                 if($st->rowCount() > 0)
                     return true;
                 
-                return $sql;            
+                return false;            
             }
             return false;
         }
