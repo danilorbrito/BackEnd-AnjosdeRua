@@ -41,9 +41,20 @@
         {   
             if($obj->id_adocao <> "")
             {
-                $st = Conn::getConn()->prepare("update mensagens_adocoes set lida=1 where id_adocao=?");
+                $sql = '';
+                if($obj->remetenteAdmin <> false)
+                    $sql = 'update mensagens_adocoes set lida=1 where id_adocao=? and remetente = "admin"';
+                else
+                    $sql = 'update mensagens_adocoes set lida=1 where id_adocao=? and remetente <> "admin"';
+
+                $st = Conn::getConn()->prepare($sql);
                 $st->bindParam(1, $obj->id_adocao);
-                return $st->execute();
+                $st->execute();
+
+                if($st->rowCount() > 0)
+                    return true;
+                
+                return $sql;            
             }
             return false;
         }
