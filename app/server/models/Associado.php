@@ -14,7 +14,7 @@
                $associado->endereco->cidade <> "" and $associado->endereco->estado <> "")
             {
                 
-                $hashMd5 = md5($associado->pass);
+                isset($associado->pass) ? $hashMd5 = md5($associado->pass) : $hashMd5 = md5(false);
                 $st = Conn::getConn()->prepare("call inserir_associados(?,?,?,?,?,?,?,?,?,?,?)");
                 $st->bindParam(1, $associado->nome);
                 $st->bindParam(2, $associado->sexo);
@@ -110,7 +110,7 @@
                $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and $associado->endereco->cep <> "" and
                $associado->endereco->cidade <> "" and $associado->endereco->estado <> "")
             {
-                $hashMd5 = md5($associado->pass);
+                isset($associado->pass) ? $hashMd5 = md5($associado->pass) : $hashMd5 = md5(false);
                 $st = Conn::getConn()->prepare("call update_associados(?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 $st->bindParam(1, $associado->id);
                 $st->bindParam(2, $associado->nome);
@@ -124,29 +124,14 @@
                 $st->bindParam(10, $associado->endereco->bairro);
                 $st->bindParam(11, $associado->endereco->cep);
                 $st->bindParam(12, $associado->endereco->cidade);
-                $st->bindParam(13, $associado->endereco->estado);
-                
-                if($st->execute() == true)
-                { 
-                    foreach($associado->telefones as $tel)
-                    {
-                        if($tel->id <> "")
-                        {
-                            if($tel->numero <> "")
-                            {
-                                $st02 = Conn::getConn()->prepare("update telefones set numero=?, tipo=? where id=?");
-                                $st02->bindParam(1, $tel->numero);
-                                $st02->bindParam(2, $tel->tipo);
-                                $st02->bindParam(3, $tel->id);
-                                $st02->execute();
-                            }
-                            else
-                                $st02 = Conn::getConn()->query("delete from telefones where id=".$tel->id);
-                        }
-                        else
-                            self::inserirTel($associado->id, $tel->numero, $tel->tipo);
-                    }
+                $st->bindParam(13, $associado->endereco->estado);                
 
+                if($st->execute() == true)
+                {
+                    if(count($associado->telefones) > 0) {
+                        Conn::getConn()->query("delete from telefones where id_associado=".$associado->id);
+                        foreach($associado->telefones as $tel) self::inserirTel($associado->id, $tel->numero, $tel->tipo); 
+                    }
                     return true;
                 }
                 return false;
