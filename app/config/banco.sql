@@ -132,3 +132,13 @@ CREATE TABLE acoes_promovidas(
 	texto LONGTEXT,
 	CONSTRAINT pk_acoes PRIMARY KEY(id)
 );
+
+/*tabela para interessados em adotar*/
+CREATE TABLE lista_de_espera(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	nome VARCHAR(80) NOT NULL,
+	email VARCHAR(70),
+	telefone VARCHAR(15) NOT NULL,
+	descricao_animal TEXT NOT NULL,
+	CONSTRAINT pk_acoes PRIMARY KEY(id)
+);

@@ -14,6 +14,7 @@
     use app\server\models\Denuncia;
     use app\server\models\ImagemDenuncia;
     use app\server\models\AcaoPromovida;
+    use app\server\models\ListaDeEspera;
     use app\server\controllers\Router;
     use app\server\controllers\Auth;
     use app\server\controllers\Upload;
@@ -357,6 +358,46 @@
                 Router::Json( 400 );
         });
     //End Points para Ações Promovidas
+
+    //End Points para Lista de Espera
+        Router::get('/listadeespera', function() {
+            Router::validateJwt();//Rota protegida por JWT
+            $lista = new ListaDeEspera();
+            Router::Json( $lista->all() );
+        });
+
+        Router::get('/listadeespera/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $lista = new ListaDeEspera();
+            Router::Json( $lista->find($params->id) );
+        });
+
+        Router::post('/listadeespera', function() {
+            $lista = new ListaDeEspera();
+            if( $lista->save( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+
+        Router::put('/listadeespera', function() {
+            Router::validateJwt();//Rota protegida por JWT
+            $lista = new ListaDeEspera();
+            if( $lista->update( Router::getJson() ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+
+        Router::delete('/listadeespera/{id}', function($params) {
+            Router::validateJwt();//Rota protegida por JWT
+            $lista = new ListaDeEspera();
+            if( $lista->trash( $params->id ) )
+                Router::Json( 200 );
+            else 
+                Router::Json( 400 );
+        });
+    //End Points para Lista de Espera
 
     //End Point Login para Associados
         Router::post('/authentication', function() {
