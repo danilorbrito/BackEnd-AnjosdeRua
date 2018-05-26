@@ -127,11 +127,9 @@
                 $st->bindParam(13, $associado->endereco->estado);                
 
                 if($st->execute() == true)
-                {
-                    if(count($associado->telefones) > 0) {
-                        Conn::getConn()->query("delete from telefones where id_associado=".$associado->id);
-                        foreach($associado->telefones as $tel) self::inserirTel($associado->id, $tel->numero, $tel->tipo); 
-                    }
+                {   
+                    Conn::getConn()->query("delete from telefones where id_associado=".$associado->id);
+                    foreach($associado->telefones as $tel) self::inserirTel($associado->id, $tel->numero, $tel->tipo);
                     return true;
                 }
                 return false;
