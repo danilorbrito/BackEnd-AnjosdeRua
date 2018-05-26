@@ -28,12 +28,6 @@
             $assoc = new Associado();
             $animal = new Animal();
 
-            $qtdMsg = Conn::getConn()->query("select count(id) as qtd from mensagens_adocoes 
-                                                                      where id_adocao=".$linha['id']."
-                                                                      and lida = 0")->fetch(PDO::FETCH_ASSOC);
-            $qtdMsg = $qtdMsg['qtd'];
-
-            $linha['novasmensagens'] = $qtdMsg;
             $linha['associado'] = $assoc->find($linha['id_associado']);
             $linha['animal'] = $animal->find($linha['id_animal']);
             unset($linha['id_animal']);
