@@ -55,7 +55,9 @@
                 $st->bindParam(6, $animal->sexo);
                 $st->bindParam(7, $animal->adotado);
                 $st->bindParam(8, $animal->id);
-                return $st->execute();
+                if($st->rowCount() > 0)
+                    return true;
+                return false;
             }
             else
                 return false;

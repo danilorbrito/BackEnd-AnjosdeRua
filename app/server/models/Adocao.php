@@ -87,7 +87,9 @@
                 $st->bindParam(2, $adocao->associado->id);
                 $st->bindParam(3, $adocao->data);
                 $st->bindParam(4, $adocao->id);
-                return $st->execute();
+                if($st->rowCount() > 0)
+                    return true;
+                return false;
             }
             else
                 return false;
