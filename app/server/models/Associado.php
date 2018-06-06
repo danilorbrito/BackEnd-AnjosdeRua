@@ -10,7 +10,7 @@
         {
             //valida os campos obrigatórios antes
             if($associado->nome <> "" and $associado->sexo <> "" and $associado->pass <> "" and
-               $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and $associado->endereco->cep <> "" and
+               $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and
                $associado->endereco->cidade <> "" and $associado->endereco->estado <> "")
             {
                 
@@ -107,7 +107,7 @@
             
             //valida os campos obrigatórios antes
             if($associado->id <> "" and $associado->nome <> "" and $associado->sexo <> "" and $associado->endereco->id <> "" and
-               $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and $associado->endereco->cep <> "" and
+               $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and
                $associado->endereco->cidade <> "" and $associado->endereco->estado <> "")
             {
                 isset($associado->pass) ? $hashMd5 = md5($associado->pass) : $hashMd5 = md5(false);
