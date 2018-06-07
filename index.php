@@ -5,6 +5,7 @@
     header('Access-Control-Allow-Headers: Authorization, content-type');
     header("Content-type:text/html; charset=utf-8");
     require_once('./vendor/autoload.php');
+    date_default_timezone_set('America/Sao_Paulo');
 
     use app\server\models\Animal;
     use app\server\models\ImagemAnimal;
