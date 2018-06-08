@@ -9,10 +9,12 @@
         {
             if ($denuncia->descricao <> "" and $denuncia->descricao_local <> "")
             {
-                $st = Conn::getConn()->prepare("call inserir_denuncias(?,?,?)");
+                $dtAtual = date("Y-m-d H:i:s");
+                $st = Conn::getConn()->prepare("call inserir_denuncias(?,?,?,?)");
                 $st->bindParam(1, $denuncia->descricao);
-                $st->bindParam(2, $denuncia->delator);//não precisa ser verificado, caso nulo a procedure colocara um valor padrao
+                $st->bindParam(2, $denuncia->delator);//não precisa ser verificado, tem um valor padrão na tabela
                 $st->bindParam(3, $denuncia->descricao_local);
+                $st->bindParam(4, $dtAtual);
                 $st->execute();
                 return $st->fetch(PDO::FETCH_ASSOC);
             }

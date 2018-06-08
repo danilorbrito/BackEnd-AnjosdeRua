@@ -10,11 +10,12 @@
             //valida os campos obrigatórios antes
             if( $mensagem->id_adocao <> "" and $mensagem->mensagem <> "" )
             {
+                $dtAtual = date("Y-m-d H:i:s");
                 $st = Conn::getConn()->prepare("call inserir_mesagens_adocao(?,?,?,?)");
                 $st->bindParam(1, $mensagem->id_adocao);
                 $st->bindParam(2, $mensagem->mensagem);
                 $st->bindParam(3, $mensagem->remetente);//não precisa ser verificado, a procedure vai colocar um valor padrão
-                $st->bindParam(4, $mensagem->datahora);//não precisa ser verificado, a procedure vai colocar um valor padrão
+                $st->bindParam(4, $dtAtual);
                 return $st->execute();
             }
             else

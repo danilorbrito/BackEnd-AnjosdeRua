@@ -110,7 +110,7 @@ CREATE TABLE mensagens_adocoes(
 CREATE TABLE denuncias(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	descricao TEXT NOT NULL,
-	delator VARCHAR(75),
+	delator VARCHAR(75) DEFAULT "Anônimo",
 	descricao_local VARCHAR(150) NOT NULL,
 	dt_denuncia DATETIME NOT NULL DEFAULT NOW(),
 	CONSTRAINT pk_01_denuncias PRIMARY KEY (id)

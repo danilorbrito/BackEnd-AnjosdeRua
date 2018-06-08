@@ -13,9 +13,11 @@
             //valida os campos obrigatórios antes
             if( $adocao->animal->id <> "" and $adocao->associado->id <> "" )
             {
-                $st = Conn::getConn()->prepare("insert into adocoes(id_animal,id_associado) values(?,?)");
+                $dtAtual = date("Y-m-d H:i:s");
+                $st = Conn::getConn()->prepare("insert into adocoes(id_animal,id_associado,datahora) values(?,?,?)");
                 $st->bindParam(1, $adocao->animal->id);
                 $st->bindParam(2, $adocao->associado->id);
+                $st->bindParam(3, $dtAtual);
                 return $st->execute();
                 //uma trigger vai setar o campo adotado do animal como true
             }

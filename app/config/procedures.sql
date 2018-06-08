@@ -58,16 +58,17 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE inserir_denuncias(IN descricao TEXT,
                                    IN delator VARCHAR(75),
-                                   IN descricao_local VARCHAR(150))
+                                   IN descricao_local VARCHAR(150),
+                                   IN dt_denuncia datetime)
 BEGIN
 
   SET @var_delator = delator;
-  SET @var_id_denuncia = 0;  
+  SET @var_id_denuncia = 0;
 
   IF(delator = "") THEN SET @var_delator = "Anônimo"; END IF;
 
-  INSERT INTO denuncias(descricao, delator, descricao_local)
-  VALUES(descricao, @var_delator, descricao_local);
+  INSERT INTO denuncias(descricao, delator, descricao_local, dt_denuncia)
+  VALUES(descricao, @var_delator, descricao_local, dt_denuncia);
 
   SELECT LAST_INSERT_ID() INTO @var_id_denuncia;
 
