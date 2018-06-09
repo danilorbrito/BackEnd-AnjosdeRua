@@ -9,7 +9,7 @@
 		private static $extensao;
 		private static $tamanho;
 		private static $permitidos;
-		private static $tamanhoMAXIMO = 2048;
+		private static $tamanhoMAXIMO = 10240; //verificar essa conf no php.ini upload_max_filesize
 		private static $logError;
 		
 		public static function move($_destino, $_permitidos=array(".jpg",".jpeg",".png"))
@@ -45,7 +45,7 @@
 				return false;
 			}
 			else
-			{
+			{	
 				return copy(self::$path_temp,self::$destino."/".self::$nome);
 			}
 		}
