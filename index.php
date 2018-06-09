@@ -5,7 +5,7 @@
     header('Access-Control-Allow-Headers: Authorization, content-type');
     header("Content-type:text/html; charset=utf-8");
     require_once('./vendor/autoload.php');
-    date_default_timezone_set('America/Sao_Paulo');
+	date_default_timezone_set('America/Sao_Paulo');
 
     use app\server\models\Animal;
     use app\server\models\ImagemAnimal;
@@ -19,7 +19,7 @@
     use app\server\controllers\Router;
     use app\server\controllers\Auth;
     use app\server\controllers\Upload;
-    use app\server\controllers\ReSizeImage;
+	use app\server\controllers\ReSizeImage;
     Router::dev();
 
 	
@@ -37,10 +37,10 @@
             Router::Json( $animal->all() );
         });
 
-        Router::get('/animais/{id}', function($params) {
+        Router::get('/animais/{nome}', function($params) {
             Router::validateJwt();//Rota protegida por JWT
             $animal = new Animal();
-            Router::Json( $animal->find( $params->id ) );
+            Router::Json( $animal->find( $params->nome ) );
         });
 
         Router::post('/animais', function() {
@@ -202,10 +202,10 @@
             Router::Json( $associado->all() );
         });
 
-        Router::get('/associados/{id}', function($params) {
+        Router::get('/associados/{nome}', function($params) {
             Router::validateJwt();//Rota protegida por JWT
             $associado = new Associado();
-            Router::Json( $associado->find( $params->id ) );
+            Router::Json( $associado->find( $params->nome ) );
         });
 
         Router::post('/associados', function() {
@@ -378,8 +378,8 @@
                 Router::Json( 400 );
         });
     //End Points para Ações Promovidas
-
-    //End Points para Lista de Espera
+	
+	//End Points para Lista de Espera
         Router::get('/listadeespera', function() {
             Router::validateJwt();//Rota protegida por JWT
             $lista = new ListaDeEspera();

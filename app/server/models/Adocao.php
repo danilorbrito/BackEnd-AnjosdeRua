@@ -7,14 +7,14 @@
 
     class Adocao {
 
-        //recebe um array com os dados da adocao que insere no banco
+        //recebe um objeto com os dados da adocao que insere no banco
         public function save( $adocao )
         {
             //valida os campos obrigatórios antes
             if( $adocao->animal->id <> "" and $adocao->associado->id <> "" )
             {
                 $dtAtual = date("Y-m-d H:i:s");
-                $st = Conn::getConn()->prepare("insert into adocoes(id_animal,id_associado,datahora) values(?,?,?)");
+                $st = Conn::getConn()->prepare("insert into adocoes(id_animal, id_associado, datahora) values(?,?,?)");
                 $st->bindParam(1, $adocao->animal->id);
                 $st->bindParam(2, $adocao->associado->id);
                 $st->bindParam(3, $dtAtual);
@@ -30,8 +30,8 @@
             $assoc = new Associado();
             $animal = new Animal();
 
-            $linha['associado'] = $assoc->find($linha['id_associado']);
-            $linha['animal'] = $animal->find($linha['id_animal']);
+            $linha['associado'] = $assoc->findById($linha['id_associado']);
+            $linha['animal'] = $animal->findById($linha['id_animal']);
             unset($linha['id_animal']);
             unset($linha['id_associado']);
             return $linha;
@@ -48,7 +48,7 @@
                 $retorno = array();
                 foreach($result as $res)
                 {
-                    $retorno[] = self::arrayAdocao($res);
+                    $retorno[] = $this->arrayAdocao($res);
                 }
                 return $retorno;
             }
@@ -63,7 +63,7 @@
             $st->closeCursor();
             if ($result == true)
             {
-                return self::arrayAdocao($result);
+                return $this->arrayAdocao($result);
             }
             return false;
         }

@@ -5,7 +5,7 @@
 
     class Animal {
 
-        //recebe um array com os dados do animal de insere no banco
+        //recebe um objeto com os dados do animal de insere no banco
         public function save( $animal )
         {
             //valida os campos obrigatórios antes
@@ -29,14 +29,19 @@
         //retorna todos os animais
         public function all() 
         {
-            return Conn::getConn()->query("select * from animais")->fetchAll(PDO::FETCH_ASSOC);
+            return Conn::getConn()->query("select * from animais where adotado=0")->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        //retorna animal pelo id
-        public function find($id) 
+		//retorna animal pelo $ID
+        public function findById($id) 
         {
             return Conn::getConn()->query("select * from animais where id=".$id)->fetch(PDO::FETCH_ASSOC);
-            
+        }
+		
+        //retorna animal pelo $nome
+        public function find($nome) 
+        {
+            return Conn::getConn()->query("select * from animais where adotado=0 and nome like '".$nome."%' limit 5 ")->fetchAll(PDO::FETCH_ASSOC);
         }
 
         //atualiza dados do animal 
@@ -55,9 +60,7 @@
                 $st->bindParam(6, $animal->sexo);
                 $st->bindParam(7, $animal->adotado);
                 $st->bindParam(8, $animal->id);
-                if($st->rowCount() > 0)
-                    return true;
-                return false;
+                return $st->execute();
             }
             else
                 return false;

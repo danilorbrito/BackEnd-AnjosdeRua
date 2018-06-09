@@ -5,7 +5,7 @@
 
     class Associado {
 
-        //recebe um array com os dados do associado que insere no banco
+        //recebe um objeto com os dados do associado que insere no banco
         public function save( $associado )
         {
             //valida os campos obrigatórios antes
@@ -85,20 +85,43 @@
             return [];
         }
 
-        //retorna associado pelo id
-        public function find($id) 
+		
+		//retorna associado pelo id
+        public function findById($id) 
         {
             $st = Conn::getConn()->query("select * from associados where id=".$id);
             $result = $st->fetch(PDO::FETCH_ASSOC);
+			
             $st->closeCursor();
             if($result == true)
-            {   
-                $result['endereco'] = self::buscarEnd($id);
-                $result['telefones'] = self::buscarTel($id);
-                unset($result['pass']);
+            {
+				$result['endereco'] = self::buscarEnd($result['id']);
+				$result['telefones']= self::buscarTel($result['id']);
+				unset($result['pass']);
                 return $result;
             }
-            return false;
+            return [];
+        }
+		
+        //retorna associado pelo nome
+        public function find($nome) 
+        {
+            $st = Conn::getConn()->query("select * from associados where nome like '".$nome."%' ");
+            $result = $st->fetchAll(PDO::FETCH_ASSOC);
+            $st->closeCursor();
+            if($result == true)
+            {
+                $retorno = array();
+                foreach($result as $res)
+                {
+                    $res['endereco'] = self::buscarEnd($res['id']);
+                    $res['telefones'] = self::buscarTel($res['id']);
+                    unset($res['pass']);
+                    $retorno[] = $res;
+                }
+                return $retorno;
+            }
+            return [];
         }
 
         //atualiza dados do associado 
