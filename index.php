@@ -19,6 +19,7 @@
     use app\server\controllers\Router;
     use app\server\controllers\Auth;
     use app\server\controllers\Upload;
+    use app\server\controllers\ReSizeImage;
     Router::dev();
 
 	
@@ -81,7 +82,16 @@
             $imgAnimal = new ImagemAnimal();
 
             if( Upload::move("./app/client/assets/imagens/animais", array(".jpg",".jpeg",".png")) == true and $imgAnimal->save( Upload::getName(), $_POST["id_animal"] ) )
+            {    
+                //os dois caminhos estão eguais pois a imagem redimensionado será salva no próprio arquivo
+                //primeiro paramentro 100 para largura, segundo 0 para altura pois a imagem se ajustará automaticamente, e o ultimo 100 para qualidade sendo o máximo
+                $resize = new ReSizeImage(  './app/client/assets/imagens/animais/'.Upload::getName(),
+                                            './app/client/assets/imagens/animais/'.Upload::getName(),
+                                            100, 0, 100);
+                $resize->executa();
+                
                 Router::Json( 200 );
+            }
             else 
                 Router::Json( 400 );
         });
@@ -151,7 +161,16 @@
             $imgDenuncia = new ImagemDenuncia();
 
             if( Upload::move("./app/client/assets/imagens/denunciadas", array(".jpg",".jpeg",".png")) == true and $imgDenuncia->save( Upload::getName(), $_POST["id_denuncia"] ) )
+            {    
+                //os dois caminhos estão eguais pois a imagem redimensionado será salva no próprio arquivo
+                //primeiro paramentro 100 para largura, segundo 0 para altura pois a imagem se ajustará automaticamente, e o ultimo 100 para qualidade sendo o máximo
+                $resize = new ReSizeImage(  './app/client/assets/imagens/denunciadas/'.Upload::getName(),
+                                            './app/client/assets/imagens/denunciadas/'.Upload::getName(),
+                                            100, 0, 100);
+                $resize->executa();
+                
                 Router::Json( 200 );
+            }
             else 
                 Router::Json( 400 );
         });
