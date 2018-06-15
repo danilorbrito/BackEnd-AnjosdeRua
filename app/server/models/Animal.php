@@ -1,6 +1,7 @@
 <?php namespace app\server\models;
 
     use app\server\controllers\Conn;
+    use app\server\models\ImagemAnimal;
     use PDO;
 
     class Animal {
@@ -92,7 +93,26 @@
             $st->bindParam(3, $params->idademax);
             $st->bindParam(4, $params->sexo);
             $st->execute();
-            return $st->fetchAll(PDO::FETCH_ASSOC);
+            $result = $st->fetchAll(PDO::FETCH_ASSOC);
+            $st->closeCursor();
+
+            if($st->rowCount() > 0)
+            {
+                $imgAnimal = new ImagemAnimal();
+
+                $return = array();
+
+                foreach($result as $res)
+                {
+                    $img = $imgAnimal->find( $res['id'] );
+                    isset($img[0]['nome_imagem']) ? $res['imagem'] = $img[0]['nome_imagem'] : $res['imagem'] = "";
+                    $return[] = $res;
+                }
+                return $return;
+                
+            }
+
+            return [];
         }
 
     }

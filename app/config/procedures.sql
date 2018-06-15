@@ -43,13 +43,8 @@ CREATE PROCEDURE filtro_animais(IN cor VARCHAR(25),
                                IN sexo VARCHAR(5))
 BEGIN
 
-  select 
-    a.*,
-    i.nome_imagem
-  from 
-    animais a
-  inner join imagens_animais i on a.id = i.id_animal
-  where a.cor = cor and (a.idade between idademin and idademax) and a.sexo = sexo;
+  select * from animais ani
+  where ani.cor = cor and (ani.idade between idademin and idademax) and ani.sexo = sexo;
 
 END $$
 DELIMITER ;
