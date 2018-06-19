@@ -1,43 +1,71 @@
 <?php namespace app\server\models;
 
     use app\server\controllers\Conn;
+    use app\server\models\Animal;
     use PDO;
 
     class ListaDeEspera
     {
         public function save( $interessado )
         {
-            if($interessado->nome <> "" and $interessado->email <> "" and $interessado->telefone <> "" and $interessado->descricao_animal <> "")
+            if($interessado->id_animal <> "" and $interessado->nome <> "" and $interessado->email <> "" and $interessado->telefone <> "")
             {
-                $st = Conn::getConn()->prepare('insert into lista_de_espera(nome,email,telefone,descricao_animal) values(?,?,?,?)');
-                $st->bindParam(1, $interessado->nome);
-                $st->bindParam(2, $interessado->email);
-                $st->bindParam(3, $interessado->telefone);
-                $st->bindParam(4, $interessado->descricao_animal);
+                $st = Conn::getConn()->prepare('insert into lista_de_espera(id_animal,nome,email,telefone) values(?,?,?,?)');
+                $st->bindParam(1, $interessado->id_animal);
+                $st->bindParam(2, $interessado->nome);
+                $st->bindParam(3, $interessado->email);
+                $st->bindParam(4, $interessado->telefone);
                 return $st->execute();
             }
             return false;
         }
 
+        public function arrayListEsp( $linha )
+        {
+            $animal = new Animal();
+            $linha['animal'] = $animal->findById($linha['id_animal']);
+            unset($linha['id_animal']);
+            return $linha;
+        }
+
         public function all()
         {
-            return Conn::getConn()->query('select * from lista_de_espera')->fetchAll(PDO::FETCH_ASSOC);
+            $st = Conn::getConn()->query('select * from lista_de_espera');
+            $result = $st->fetchAll(PDO::FETCH_ASSOC);
+            $st->closeCursor();
+            if($result == true)
+            {
+                $retorno = array();
+                foreach($result as $res)
+                {
+                    $retorno[] = $this->arrayListEsp($res);
+                }
+                return $retorno;
+            }
+            return [];
         }
 
         public function find( $id )
         {
-            return Conn::getConn()->query('select * from lista_de_espera where id='.$id)->fetch(PDO::FETCH_ASSOC);
+            $st = Conn::getConn()->query('select * from lista_de_espera where id='.$id);
+            $result = $st->fetch(PDO::FETCH_ASSOC);
+            $st->closeCursor();
+            if ($result == true)
+            {
+                return $this->arrayListEsp($result);
+            }
+            return false;
         }
 
         public function update( $interessado )
         {
-            if($interessado->id <> "" and $interessado->nome <> "" and $interessado->email <> "" and $interessado->telefone <> "" and $interessado->descricao_animal <> "")
+            if($interessado->id_animal <> "" and $interessado->nome <> "" and $interessado->email <> "" and $interessado->telefone <> "")
             {
-                $st = Conn::getConn()->prepare('update lista_de_espera set nome=?, email=?, telefone=?, descricao_animal=? where id=?');
-                $st->bindParam(1, $interessado->nome);
-                $st->bindParam(2, $interessado->email);
-                $st->bindParam(3, $interessado->telefone);
-                $st->bindParam(4, $interessado->descricao_animal);
+                $st = Conn::getConn()->prepare('update lista_de_espera set id_animal=?, nome=?, email=?, telefone=? where id=?');
+                $st->bindParam(1, $interessado->id_animal);
+                $st->bindParam(2, $interessado->nome);
+                $st->bindParam(3, $interessado->email);
+                $st->bindParam(4, $interessado->telefone);
                 $st->bindParam(5, $interessado->id);
                 $st->execute();
                 if($st->rowCount() > 0)

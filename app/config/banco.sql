@@ -136,9 +136,10 @@ CREATE TABLE acoes_promovidas(
 /*tabela para interessados em adotar*/
 CREATE TABLE lista_de_espera(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	id_animal INTEGER UNSIGNED NOT NULL,
 	nome VARCHAR(80) NOT NULL,
 	email VARCHAR(70),
 	telefone VARCHAR(15) NOT NULL,
-	descricao_animal TEXT NOT NULL,
-	CONSTRAINT pk_acoes PRIMARY KEY(id)
+	CONSTRAINT pk_lista_de_espera PRIMARY KEY(id),
+	CONSTRAINT fk_animais FOREIGN KEY(id_animal) REFERENCES animais (id)
 );
