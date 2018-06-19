@@ -5,16 +5,16 @@
 
     class Associado {
 
-        //recebe um array com os dados do associado que insere no banco
+        //recebe um objeto com os dados do associado que insere no banco
         public function save( $associado )
         {
             //valida os campos obrigatórios antes
             if($associado->nome <> "" and $associado->sexo <> "" and $associado->pass <> "" and
-               $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and $associado->endereco->cep <> "" and
-               $associado->endereco->cidade <> "" and $associado->endereco->estado <> "" and count($associado->telefones) <> 0)
+               $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and
+               $associado->endereco->cidade <> "" and $associado->endereco->estado <> "")
             {
                 
-                $hashMd5 = md5($associado->pass);
+                isset($associado->pass) ? $hashMd5 = md5($associado->pass) : $hashMd5 = md5(false);
                 $st = Conn::getConn()->prepare("call inserir_associados(?,?,?,?,?,?,?,?,?,?,?)");
                 $st->bindParam(1, $associado->nome);
                 $st->bindParam(2, $associado->sexo);
@@ -54,20 +54,20 @@
 
         public function buscarTel($id_associado)
         {
-            $st = Conn::getConn()->query("select id, numero, tipo from Telefones where id_associado=".$id_associado);
+            $st = Conn::getConn()->query("select id, numero, tipo from telefones where id_associado=".$id_associado);
             return $st->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function buscarEnd($id_associado)
         {
-            $st = Conn::getConn()->query("select id, logradouro, numero, complemento, bairro, cep, cidade, estado from Enderecos where id_associado=".$id_associado);
+            $st = Conn::getConn()->query("select id, logradouro, numero, complemento, bairro, cep, cidade, estado from enderecos where id_associado=".$id_associado);
             return $st->fetch(PDO::FETCH_ASSOC);
         }
 
         //retorna todos os associados
         public function all() 
         {
-            $st = Conn::getConn()->query("select * from Associados");
+            $st = Conn::getConn()->query("select * from associados");
             $result = $st->fetchAll(PDO::FETCH_ASSOC);
             $st->closeCursor();
             if($result == true)
@@ -77,26 +77,51 @@
                 {
                     $res['endereco'] = self::buscarEnd($res['id']);
                     $res['telefones'] = self::buscarTel($res['id']);
+                    unset($res['pass']);
                     $retorno[] = $res;
                 }
                 return $retorno;
             }
-            return '';
+            return [];
         }
 
-        //retorna associado pelo id
-        public function find($id) 
+		
+		//retorna associado pelo id
+        public function findById($id) 
         {
-            $st = Conn::getConn()->query("select * from Associados where id=".$id);
+            $st = Conn::getConn()->query("select * from associados where id=".$id);
             $result = $st->fetch(PDO::FETCH_ASSOC);
+			
             $st->closeCursor();
             if($result == true)
-            {   
-                $result['endereco'] = self::buscarEnd($id);
-                $result['telefones'] = self::buscarTel($id);
+            {
+				$result['endereco'] = self::buscarEnd($result['id']);
+				$result['telefones']= self::buscarTel($result['id']);
+				unset($result['pass']);
                 return $result;
             }
-            return false;
+            return [];
+        }
+		
+        //retorna associado pelo nome
+        public function find($nome) 
+        {
+            $st = Conn::getConn()->query("select * from associados where nome like '".$nome."%' ");
+            $result = $st->fetchAll(PDO::FETCH_ASSOC);
+            $st->closeCursor();
+            if($result == true)
+            {
+                $retorno = array();
+                foreach($result as $res)
+                {
+                    $res['endereco'] = self::buscarEnd($res['id']);
+                    $res['telefones'] = self::buscarTel($res['id']);
+                    unset($res['pass']);
+                    $retorno[] = $res;
+                }
+                return $retorno;
+            }
+            return [];
         }
 
         //atualiza dados do associado 
@@ -105,10 +130,10 @@
             
             //valida os campos obrigatórios antes
             if($associado->id <> "" and $associado->nome <> "" and $associado->sexo <> "" and $associado->endereco->id <> "" and
-               $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and $associado->endereco->cep <> "" and
-               $associado->endereco->cidade <> "" and $associado->endereco->estado <> "" and count($associado->telefones) <> 0)
+               $associado->endereco->logradouro <> "" and $associado->endereco->bairro <> "" and
+               $associado->endereco->cidade <> "" and $associado->endereco->estado <> "")
             {
-                $hashMd5 = md5($associado->pass);
+                isset($associado->pass) ? $hashMd5 = md5($associado->pass) : $hashMd5 = md5(false);
                 $st = Conn::getConn()->prepare("call update_associados(?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 $st->bindParam(1, $associado->id);
                 $st->bindParam(2, $associado->nome);
@@ -122,29 +147,12 @@
                 $st->bindParam(10, $associado->endereco->bairro);
                 $st->bindParam(11, $associado->endereco->cep);
                 $st->bindParam(12, $associado->endereco->cidade);
-                $st->bindParam(13, $associado->endereco->estado);
-                
-                if($st->execute() == true)
-                { 
-                    foreach($associado->telefones as $tel)
-                    {
-                        if($tel->id <> "")
-                        {
-                            if($tel->numero <> "")
-                            {
-                                $st02 = Conn::getConn()->prepare("update Telefones set numero=?, tipo=? where id=?");
-                                $st02->bindParam(1, $tel->numero);
-                                $st02->bindParam(2, $tel->tipo);
-                                $st02->bindParam(3, $tel->id);
-                                $st02->execute();
-                            }
-                            else
-                                $st02 = Conn::getConn()->query("delete from Telefones where id=".$tel->id);
-                        }
-                        else
-                            self::inserirTel($associado->id, $tel->numero, $tel->tipo);
-                    }
+                $st->bindParam(13, $associado->endereco->estado);                
 
+                if($st->execute() == true)
+                {   
+                    Conn::getConn()->query("delete from telefones where id_associado=".$associado->id);
+                    foreach($associado->telefones as $tel) self::inserirTel($associado->id, $tel->numero, $tel->tipo);
                     return true;
                 }
                 return false;
@@ -156,9 +164,12 @@
         //deleta associado pelo id
         public function trash( $id )
         {
-            $st = Conn::getConn()->prepare(" DELETE FROM Associados WHERE id=? ");
+            $st = Conn::getConn()->prepare("DELETE FROM associados WHERE id=?");
             $st->bindParam(1, $id);
-            return $st->execute();
+            $st->execute();
+            if($st->rowCount() > 0)
+                return true;
+            return false;
         }
 
     }

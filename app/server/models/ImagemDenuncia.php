@@ -21,12 +21,20 @@
 
         public function all() 
         {
-            return Conn::getConn()->query("select * from Imagens where flag='denunciada'")->fetchAll(PDO::FETCH_ASSOC);
+            return Conn::getConn()->query("select * from imagens where flag='denunciada'")->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function trash($id) 
         {
-           $imagem = Conn::getConn()->query("select nome_imagem from Imagens where id=".$id)->fetch(PDO::FETCH_ASSOC);
-           return (Conn::getConn()->query("delete from Imagens where id=".$id) == true) and (unlink("./app/client/assets/imagens/denunciadas/".$imagem["nome_imagem"]));
+            $imagem = Conn::getConn()->query("select nome_imagem from imagens where id=".$id)->fetch(PDO::FETCH_ASSOC);
+            $st = Conn::getConn()->prepare("delete from imagens where id=?");
+            $st->bindParam(1, $id);
+            $st->execute();
+            if ($st->rowCount() > 0)
+            {
+                unlink("./app/client/assets/imagens/denunciadas/".$imagem["nome_imagem"]);
+                return true;
+            }
+            return false;
         }
     }

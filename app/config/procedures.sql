@@ -21,9 +21,9 @@ BEGIN
   IF (nome = "") THEN SET @var_nome = "Sem Nome"; END IF;
   IF(raca = "") THEN SET @var_raca = "SRD"; END IF;
   IF (idade = "") THEN SET @var_idade = NULL; END IF;
-  IF (adotado = "") THEN SET @var_adotado = "false"; END IF;
+  IF (adotado = "") THEN SET @var_adotado = 0; END IF;
 
-  INSERT INTO Animais(nome, descricao, raca, cor, idade, sexo, adotado)
+  INSERT INTO animais(nome, descricao, raca, cor, idade, sexo, adotado)
   VALUES(@var_nome, @var_descricao, @var_raca, @var_cor, @var_idade, @var_sexo, @var_adotado);
 
   SELECT LAST_INSERT_ID() INTO @var_id_animal;
@@ -35,38 +35,28 @@ BEGIN
 END $$
 DELIMITER ;
 
-/* Procedure Imagens_Animais (VINCULADA AOS ANIMAIS) 
-DELIMITER $$
-CREATE PROCEDURE inserir_imagens_animais(IN id_animal INTEGER,
-                                         IN nome_imagem TEXT)
-BEGIN
-
-  SET @var_id_animal = id_animal;
-  SET @var_nome_imagem = nome_imagem;
-
-  INSERT INTO Imagens_Animais(id_animal, nome_imagem)
-  VALUES(@var_id_animal, @var_nome_imagem);
-
-  COMMIT WORK;
-
-END $$
-DELIMITER ; */
-
 /* Procedure Selecionar animais por filtro*/
 DELIMITER $$
-CREATE PROCEDURE filtro_animais(IN cor VARCHAR(25),
-                               IN idademin INTEGER,
-                               IN idademax INTEGER,
-                               IN sexo VARCHAR(5))
+CREATE PROCEDURE filtro_animais(IN sexo VARCHAR(5),
+                                IN idademin INTEGER,
+                                IN idademax INTEGER,
+                                IN raca VARCHAR(35),
+                                IN cor VARCHAR(25))
 BEGIN
 
-  select 
-    a.*,
-    i.nome_imagem
-  from 
-    animais a
-  inner join imagens_animais i on a.id = i.id_animal
-  where a.cor = cor and (a.idade between idademin and idademax) and a.sexo = sexo;
+  IF(sexo = "a")THEN
+    select * from animais ani
+    where (ani.idade between idademin and idademax) and 
+    if(char_length(raca) > 0, ani.raca = raca, ani.raca <> "") and
+    if(char_length(cor) > 0, ani.cor = cor, ani.cor <> "") and
+    ani.adotado = 0;
+  ELSE
+    select * from animais ani
+    where ani.sexo = sexo and (ani.idade between idademin and idademax) and 
+    if(char_length(raca) > 0, ani.raca = raca, ani.raca <> "") and
+    if(char_length(cor) > 0, ani.cor = cor, ani.cor <> "") and
+    ani.adotado = 0;
+  END IF;
 
 END $$
 DELIMITER ;
@@ -75,42 +65,26 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE inserir_denuncias(IN descricao TEXT,
                                    IN delator VARCHAR(75),
-                                   IN descricao_local VARCHAR(150))
+                                   IN descricao_local VARCHAR(150),
+                                   IN dt_denuncia datetime)
 BEGIN
 
   SET @var_delator = delator;
-  SET @var_id_denuncia = 0;  
+  SET @var_id_denuncia = 0;
 
   IF(delator = "") THEN SET @var_delator = "Anônimo"; END IF;
 
-  INSERT INTO Denuncias(descricao, delator, descricao_local)
-  VALUES(descricao, @var_delator, descricao_local);
+  INSERT INTO denuncias(descricao, delator, descricao_local, dt_denuncia)
+  VALUES(descricao, @var_delator, descricao_local, dt_denuncia);
 
   SELECT LAST_INSERT_ID() INTO @var_id_denuncia;
 
-  SELECT * from Denuncias where id = @var_id_denuncia;
+  SELECT * from denuncias where id = @var_id_denuncia;
 
   COMMIT WORK;
 
 END $$
 DELIMITER ;
-
-/* Procedure Imagens_Denuncias (VINCULADA AS DENUNCIAS) 
-DELIMITER $$
-CREATE PROCEDURE inserir_imagens_denuncias(IN id_denuncia INTEGER,
-                                           IN nome_imagem TEXT)
-BEGIN
-
-  SET @var_id_denuncia = id_denuncia;
-  SET @var_nome_imagem = nome_imagem;
-
-  INSERT INTO Imagens_Denuncias(id_denuncia, nome_imagem)
-  VALUES(@var_id_denuncia, @var_nome_imagem);
-
-  COMMIT WORK;
-
-END $$
-DELIMITER ; */
 
 /* Procedure Imagens */
 DELIMITER $$
@@ -119,7 +93,7 @@ CREATE PROCEDURE inserir_imagens(IN nome_imagem TEXT,
                                  IN flag VARCHAR(15))
 BEGIN
 
-  INSERT INTO Imagens(nome_imagem, id_foreign, flag)
+  INSERT INTO imagens(nome_imagem, id_foreign, flag)
   VALUES(nome_imagem, id_foreign, flag);
 
   COMMIT WORK;
@@ -151,15 +125,15 @@ BEGIN
   IF(numero = "") THEN SET @var_numero = "S/n"; END IF;
   IF(complemento = "") THEN SET @var_complemento = NULL; END IF;
 
-  INSERT INTO Associados(nome, sexo, email, pass)
+  INSERT INTO associados(nome, sexo, email, pass)
   VALUES(nome, sexo, @var_email, pass);
 
   SELECT LAST_INSERT_ID() INTO @var_id_associado;
 
-  INSERT INTO Enderecos(id_associado, logradouro, numero, complemento, bairro, cep, cidade, estado)
+  INSERT INTO enderecos(id_associado, logradouro, numero, complemento, bairro, cep, cidade, estado)
   VALUES(@var_id_associado, logradouro, @var_numero, @var_complemento, bairro, cep, cidade, estado);
 
-  SELECT id from Associados WHERE id = @var_id_associado;
+  SELECT id from associados WHERE id = @var_id_associado;
 
   COMMIT WORK;
 
@@ -173,7 +147,7 @@ CREATE PROCEDURE inserir_telefones(IN id_associado INTEGER,
                                    IN tipo VARCHAR(15))
 BEGIN
 
-  INSERT INTO Telefones(id_associado, numero, tipo)
+  INSERT INTO telefones(id_associado, numero, tipo)
   VALUES(id_associado, numero, tipo);
 
   COMMIT WORK;
@@ -199,16 +173,71 @@ CREATE PROCEDURE update_associados(IN id_associado INTEGER,
 BEGIN
 
   IF(pass = "d41d8cd98f00b204e9800998ecf8427e" or pass = "") THEN
-    UPDATE Associados SET nome=nome, sexo=sexo, email=email WHERE id=id_associado;  
+    UPDATE associados SET nome=nome, sexo=sexo, email=email WHERE id=id_associado;  
   ELSE    
-    UPDATE Associados SET nome=nome, sexo=sexo, email=email, pass=pass WHERE id=id_associado;
+    UPDATE associados SET nome=nome, sexo=sexo, email=email, pass=pass WHERE id=id_associado;
   END IF;
 
-  UPDATE Enderecos SET logradouro=logradouro, numero=numero, complemento=complemento, bairro=bairro, cep=cep, cidade=cidade, estado=estado WHERE id = id_endereco; 
+  UPDATE enderecos SET logradouro=logradouro, numero=numero, complemento=complemento, bairro=bairro, cep=cep, cidade=cidade, estado=estado WHERE id = id_endereco; 
 
   COMMIT WORK;
 
 END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE PROCEDURE delete_animais(IN id_animal INTEGER)
+BEGIN
 
+  update animais set adotado=0 where id = id_animal;
+  delete from animais where id = id_animal;
+
+  COMMIT WORK;
+END $$
+DELIMITER ;
+
+/* Procedure Mensagens */
+DELIMITER $$
+CREATE PROCEDURE inserir_mesagens_adocao(IN id_adocao INTEGER,
+                                   IN mensagem TEXT,
+                                   IN remetente VARCHAR(100),
+                                   IN datahora datetime)
+BEGIN
+  SET @var_remetente = remetente;
+  SET @var_dthora = datahora;
+  IF(remetente = "") THEN SET @var_remetente = "admin"; END IF;
+  IF(datahora = "") THEN SET @var_dthora = NOW(); END IF;
+
+  INSERT INTO mensagens_adocoes(id_adocao, mensagem, remetente, datahora)
+  VALUES(id_adocao, mensagem, @var_remetente, @var_dthora);
+
+  COMMIT WORK;
+
+END $$
+DELIMITER ;
+
+/*Retorna o total de mensagens não lidas para o Admin*/
+DELIMITER $$
+CREATE PROCEDURE select_mensagens_admin( IN id_adocao INTEGER )
+BEGIN 
+
+  select count(md.id) as total from  mensagens_adocoes md
+  where md.id_adocao = id_adocao and md.remetente <> "admin" and md.lida = 0;
+
+END $$
+DELIMITER ;
+
+/*Retorna o total de mensagens e o ID da adoção das mensagens não lidas para o Associado*/
+DELIMITER $$
+CREATE PROCEDURE select_mensagens_assoc( IN id_associado INTEGER )
+BEGIN 
+
+  select 
+    ad.id as id_adocao,
+    (select count(id) from mensagens_adocoes 
+    where id_adocao = ad.id and remetente = "admin" and lida = 0) as total
+  from  adocoes ad
+  where ad.id_associado = id_associado;
+
+END $$
+DELIMITER ;

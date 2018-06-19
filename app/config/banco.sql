@@ -26,7 +26,7 @@ CREATE DATABASE IF NOT EXISTS anjos_de_rua
 USE anjos_de_rua;
 
 /* TABELA ADMIN */
-CREATE TABLE Admin(
+CREATE TABLE admin(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	nome VARCHAR(75) NOT NULL,
 	login VARCHAR(50) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE Admin(
 
 
 /* TABELA ANIMAIS */
-CREATE TABLE Animais(
+CREATE TABLE animais(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	nome VARCHAR(30) DEFAULT 'Sem Nome',
 	descricao TEXT NOT NULL,
@@ -44,21 +44,12 @@ CREATE TABLE Animais(
 	cor VARCHAR(25) NOT NULL,
 	idade INTEGER,
 	sexo VARCHAR(5) NOT NULL,
-	adotado VARCHAR(5) NOT NULL,
+	adotado BOOLEAN NOT NULL,
 	CONSTRAINT pk_01_animais PRIMARY KEY (id)
 );
 
-/* TABELA IMAGENS_ANIMAIS (VINCULADA AOS ANIMAIS) 
-CREATE TABLE Imagens_Animais(
-	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  id_animal INTEGER UNSIGNED NOT NULL,
-  nome_imagem TEXT NOT NULL,
-  CONSTRAINT pk_01_imagensAnimais PRIMARY KEY (id),
-  CONSTRAINT fk_01_imagensAnimais_animais FOREIGN KEY (id_animal) REFERENCES Animais (id)
-);*/
-
 /* TABELA ASSOCIADOS */
-CREATE TABLE Associados(
+CREATE TABLE associados(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	nome VARCHAR(80) NOT NULL,
 	sexo VARCHAR(10) NOT NULL,
@@ -68,7 +59,7 @@ CREATE TABLE Associados(
 );
 
 /* TABELA ENDERECOS */
-CREATE TABLE Enderecos(
+CREATE TABLE enderecos(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	id_associado INTEGER UNSIGNED NOT NULL,
 	logradouro VARCHAR(150) NOT NULL,
@@ -79,62 +70,54 @@ CREATE TABLE Enderecos(
 	cidade VARCHAR(100) NOT NULL,
 	estado CHAR(2) NOT NULL,
 	CONSTRAINT pk_01_enderecos PRIMARY KEY (id),
-	CONSTRAINT fk_01_enderecos_associados FOREIGN KEY (id_associado) REFERENCES Associados (id)
+	CONSTRAINT fk_01_enderecos_associados FOREIGN KEY (id_associado) REFERENCES associados (id)
 );
 
 /* TABELA TELEFONES */
-CREATE TABLE Telefones(
+CREATE TABLE telefones(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	id_associado INTEGER UNSIGNED NOT NULL,
 	numero VARCHAR(15) NOT NULL,
 	tipo VARCHAR(15) NOT NULL,
 	CONSTRAINT pk_01_telefones PRIMARY KEY (id),
-	CONSTRAINT fk_01_telefones_associados FOREIGN KEY (id_associado) REFERENCES Associados (id)
+	CONSTRAINT fk_01_telefones_associados FOREIGN KEY (id_associado) REFERENCES associados (id)
 );
 
 /* TABELA ADOCOES */
-CREATE TABLE Adocoes(
+CREATE TABLE adocoes(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	id_animal INTEGER UNSIGNED NOT NULL,
 	id_associado INTEGER UNSIGNED NOT NULL,
 	datahora DATETIME NOT NULL DEFAULT NOW(),
 	CONSTRAINT pk_01_adocoes PRIMARY KEY (id),
-	CONSTRAINT fk_01_adocoes_animais FOREIGN KEY (id_animal) REFERENCES Animais (id),
-	CONSTRAINT fk_02_adocoes_associados FOREIGN KEY (id_associado) REFERENCES Associados (id)
+	CONSTRAINT fk_01_adocoes_animais FOREIGN KEY (id_animal) REFERENCES animais (id),
+	CONSTRAINT fk_02_adocoes_associados FOREIGN KEY (id_associado) REFERENCES associados (id)
 );
 
 /* TABELA MENSAGENS_ADOCOES (VINCULADA AS ADOCOES) */
-CREATE TABLE Mensagens_Adocoes(
+CREATE TABLE mensagens_adocoes(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	id_adocao INTEGER UNSIGNED NOT NULL,
 	mensagem TEXT NOT NULL,
-	remetente VARCHAR(22) NOT NULL DEFAULT "Anjos De Rua - Adoções",
+	remetente VARCHAR(100) NOT NULL DEFAULT "admin",
 	datahora DATETIME NOT NULL DEFAULT NOW(),
+	lida BOOLEAN NOT NULL DEFAULT FALSE,
 	CONSTRAINT pk_01_mensagensAdocoes PRIMARY KEY (id),
-	CONSTRAINT fk_01_mensagensAdocoes_adocoes FOREIGN KEY (id_adocao) REFERENCES Adocoes (id)
+	CONSTRAINT fk_01_mensagensAdocoes_adocoes FOREIGN KEY (id_adocao) REFERENCES adocoes (id)
 );
 
 /* TABELA DENUNCIAS */
-CREATE TABLE Denuncias(
+CREATE TABLE denuncias(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	descricao TEXT NOT NULL,
-	delator VARCHAR(75),
+	delator VARCHAR(75) DEFAULT "Anônimo",
 	descricao_local VARCHAR(150) NOT NULL,
 	dt_denuncia DATETIME NOT NULL DEFAULT NOW(),
 	CONSTRAINT pk_01_denuncias PRIMARY KEY (id)
 );
 
-/* TABELA IMAGENS_DENUNCIAS (VINCULADA AS DENUNCIAS) 
-CREATE TABLE Imagens_Denuncias(
-	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  id_denuncia INTEGER UNSIGNED NOT NULL,
-  nome_imagem TEXT NOT NULL,
-  CONSTRAINT pk_01_imagensDenuncias PRIMARY KEY (id),
-  CONSTRAINT fk_01_imagensDenuncias_denuncias FOREIGN KEY (id_denuncia) REFERENCES Denuncias (id)
-);*/
-
 /*Tabela de imagens para animais e também para animais denunciados*/
-CREATE TABLE Imagens(
+CREATE TABLE imagens(
   id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   nome_imagem TEXT NOT NULL,
   id_foreign INTEGER NOT NULL,
@@ -143,9 +126,20 @@ CREATE TABLE Imagens(
 );
 
 /*tabela para ações promovidas pela instituição*/
-CREATE TABLE Acoes_Promovidas(
+CREATE TABLE acoes_promovidas(
 	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	titulo VARCHAR(100),
 	texto LONGTEXT,
 	CONSTRAINT pk_acoes PRIMARY KEY(id)
+);
+
+/*tabela para interessados em adotar*/
+CREATE TABLE lista_de_espera(
+	id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	id_animal INTEGER UNSIGNED NOT NULL,
+	nome VARCHAR(80) NOT NULL,
+	email VARCHAR(70),
+	telefone VARCHAR(15) NOT NULL,
+	CONSTRAINT pk_lista_de_espera PRIMARY KEY(id),
+	CONSTRAINT fk_animais FOREIGN KEY(id_animal) REFERENCES animais (id)
 );

@@ -190,7 +190,7 @@
 			if( gettype($data) !== "array" ) $data = array("response"=>$data);
 			$headers = array(
 				"Content_type"=>"application/json",
-				"time_stamp"=>date("d-m-Y")." ".date("h:m:s"),
+				"time_stamp"=>date("d-m-Y")." ".date("H:i:s"),
 				"data"=> $data
 			);
 			print_r(json_encode($headers));
