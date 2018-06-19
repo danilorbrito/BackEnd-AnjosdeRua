@@ -113,7 +113,7 @@
     //End Points Imagens_animais
 
     //End Point para Filtro de animais
-        Router::get('/filtro/{cor}/{idademin}/{idademax}/{sexo}', function($params) {
+        Router::get('/filtro/{sexo}/{idademin}/{idademax}/{raca}/{cor}', function($params) {
             $animal = new Animal();
             Router::Json( $animal->filtro( $params ) );
         });

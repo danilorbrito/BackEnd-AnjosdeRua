@@ -37,14 +37,24 @@ DELIMITER ;
 
 /* Procedure Selecionar animais por filtro*/
 DELIMITER $$
-CREATE PROCEDURE filtro_animais(IN cor VARCHAR(25),
-                               IN idademin INTEGER,
-                               IN idademax INTEGER,
-                               IN sexo VARCHAR(5))
+CREATE PROCEDURE filtro_animais(IN sexo VARCHAR(5),
+                                IN idademin INTEGER,
+                                IN idademax INTEGER,
+                                IN raca VARCHAR(35),
+                                IN cor VARCHAR(25))
 BEGIN
 
-  select * from animais ani
-  where ani.cor = cor and (ani.idade between idademin and idademax) and ani.sexo = sexo;
+  IF(sexo = "a")THEN
+    select * from animais ani
+    where (ani.idade between idademin and idademax) and 
+    if(char_length(raca) > 0, ani.raca = raca, ani.raca <> "") and
+    if(char_length(cor) > 0, ani.cor = cor, ani.cor <> "");
+  ELSE
+    select * from animais ani
+    where ani.sexo = sexo and (ani.idade between idademin and idademax) and 
+    if(char_length(raca) > 0, ani.raca = raca, ani.raca <> "") and
+    if(char_length(cor) > 0, ani.cor = cor, ani.cor <> "");
+  END IF;
 
 END $$
 DELIMITER ;

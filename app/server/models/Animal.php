@@ -87,30 +87,35 @@
         }
 
         public function filtro( $params ) {
-            $st = Conn::getConn()->prepare("call filtro_animais(?,?,?,?)");
-            $st->bindParam(1, $params->cor);
-            $st->bindParam(2, $params->idademin);
-            $st->bindParam(3, $params->idademax);
-            $st->bindParam(4, $params->sexo);
-            $st->execute();
-            $result = $st->fetchAll(PDO::FETCH_ASSOC);
-            $st->closeCursor();
-
-            if($st->rowCount() > 0)
+            if($params->idademin <> "" and $params->idademax <> "" and $params->sexo <> "")
             {
-                $imgAnimal = new ImagemAnimal();
+                $st = Conn::getConn()->prepare("call filtro_animais(?,?,?,?,?)");
+                $st->bindParam(1, $params->sexo);
+                $st->bindParam(2, $params->idademin);
+                $st->bindParam(3, $params->idademax);  
+                $st->bindParam(4, $params->raca);
+                $st->bindParam(5, $params->cor);
+                $st->execute();
+                $result = $st->fetchAll(PDO::FETCH_ASSOC);
+                $st->closeCursor();
 
-                $return = array();
-
-                foreach($result as $res)
+                if($st->rowCount() > 0)
                 {
-                    $img = $imgAnimal->find( $res['id'] );
-                    isset($img[0]['nome_imagem']) ? $res['imagem'] = $img[0]['nome_imagem'] : $res['imagem'] = "";
-                    $return[] = $res;
-                }
-                return $return;
-                
+                    $imgAnimal = new ImagemAnimal();
+
+                    $return = array();
+
+                    foreach($result as $res)
+                    {
+                        $img = $imgAnimal->find( $res['id'] );
+                        isset($img[0]['nome_imagem']) ? $res['imagem'] = $img[0]['nome_imagem'] : $res['imagem'] = "";
+                        $return[] = $res;
+                    }
+                    return $return;
+                    
+                } 
             }
+            
 
             return [];
         }
