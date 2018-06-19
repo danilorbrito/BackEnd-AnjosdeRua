@@ -48,12 +48,14 @@ BEGIN
     select * from animais ani
     where (ani.idade between idademin and idademax) and 
     if(char_length(raca) > 0, ani.raca = raca, ani.raca <> "") and
-    if(char_length(cor) > 0, ani.cor = cor, ani.cor <> "");
+    if(char_length(cor) > 0, ani.cor = cor, ani.cor <> "") and
+    ani.adotado = 0;
   ELSE
     select * from animais ani
     where ani.sexo = sexo and (ani.idade between idademin and idademax) and 
     if(char_length(raca) > 0, ani.raca = raca, ani.raca <> "") and
-    if(char_length(cor) > 0, ani.cor = cor, ani.cor <> "");
+    if(char_length(cor) > 0, ani.cor = cor, ani.cor <> "") and
+    ani.adotado = 0;
   END IF;
 
 END $$
