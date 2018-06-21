@@ -25,8 +25,15 @@
 
             if ($this->typeUser === 1) { //para usuarios comuns
                 $resultSQL = Login::logarCommonUser($this->login, $this->password);
-                if ($resultSQL > 0)
-                    return Router::Jwt();
+                if ($resultSQL[0] > 0)
+                {
+                    $token = json_decode(Router::Jwt());
+                    return array (
+                        'id_associado' => $resultSQL[1],
+                        'ids_adocoes' => $resultSQL[2],
+                        'token' => $token->token
+                    );
+                }
             } elseif ($this->typeUser === 2) { //para administradores
                 $resultSQL = Login::logarAdmin($this->login, $this->password);
                 if ($resultSQL > 0)
