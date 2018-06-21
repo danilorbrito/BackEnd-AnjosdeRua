@@ -21,7 +21,11 @@
 
         public function find($id)
         {
-            return Conn::getConn()->query("select * from imagens where flag='animal' and id_foreign=".$id)->fetchAll(PDO::FETCH_ASSOC);
+            $st = Conn::getConn()->query("select * from imagens where flag='animal' and id_foreign=".$id)->fetchAll(PDO::FETCH_ASSOC);
+            if($st == null)
+                return array ( array ('nome_imagem' => 'default.png') );
+            
+            return $st;
         }
 
 		public function all()
